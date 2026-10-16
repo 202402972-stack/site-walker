@@ -28,7 +28,14 @@ export interface JobSectionResult {
 export interface Job {
   id: string;
   url: string;
-  settings: { maxSections: number; viewport: "desktop" | "mobile"; format: "webp" | "png" };
+  settings: {
+    maxSections: number;
+    viewport: "desktop" | "mobile";
+    format: "webp" | "png";
+    /** Optional login. Username + login page survive to disk; the PASSWORD
+        lives only in server/jobs/secrets.ts (memory) and is deleted on use. */
+    auth?: { username: string; loginUrl?: string };
+  };
   status: JobStatus;
   steps: JobEvent[];
   sections: JobSectionResult[];

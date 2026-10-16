@@ -161,6 +161,44 @@ export function Landing({ limits, sample }: { limits: Limits; sample: SampleRun 
           </div>
         </section>
 
+        <section className="wrap block" id="login" style={anchorSection} aria-labelledby="login-h">
+          <Reveal>
+            <p className="eyebrow">Sites with login</p>
+            <h2 id="login-h">If the site needs sign-in, the agent can sign in first.</h2>
+            <p>
+              In the console, add the site's username and password to the run. The agent opens the
+              login page in the same real browser, fills the form, submits it, and captures with the
+              resulting session. A failed login never blocks the run — it is logged with its reason
+              and capture continues with whatever is public.
+            </p>
+            <div className="card" style={{ marginTop: 16 }}>
+              <h3>Works with</h3>
+              <p className="muted" style={{ marginBottom: 0 }}>Plain email + password forms on the same site.</p>
+            </div>
+            <div className="card" style={{ marginTop: 12 }}>
+              <h3>Honest limits</h3>
+              <StepList
+                steps={[
+                  { event: "LOGIN_FAILED", detail: "Multi-step logins, MFA/OTP codes, passkeys, and SSO round-trips are not supported — the run reports the failure and moves on." },
+                  { event: "LOGIN_FAILED", detail: "Google and other big providers often block sign-ins from server IPs as suspicious. It may work, it may challenge or lock the account — use a dedicated account, never your main one." },
+                  { event: "BOT_CHALLENGE", detail: "CAPTCHAs and Cloudflare challenges are detected and reported, never solved or bypassed. A page that only shows a challenge captures nothing." },
+                ]}
+              />
+            </div>
+            <div className="card" style={{ marginTop: 12 }}>
+              <h3>Your password is never stored</h3>
+              <p className="muted" style={{ marginBottom: 0 }}>
+                Used once from server memory for that run, deleted the moment it is used, and never
+                written to logs, job files, or the ZIP. The login page must be on the same site as
+                the URL being captured. Only ever use accounts you own or have permission to use.
+              </p>
+            </div>
+            <div className="btn-row">
+              <a className="btn" href="/app">Open the console</a>
+            </div>
+          </Reveal>
+        </section>
+
         <section className="wrap block" id="limits" style={anchorSection} aria-labelledby="limits-h">
           <Reveal>
             <p className="eyebrow">Controls and limits</p>

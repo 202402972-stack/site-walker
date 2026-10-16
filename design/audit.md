@@ -24,3 +24,10 @@ history → reopen → lightbox → ZIP → delete) reviewed as screenshots.
 Reveal is progressive enhancement (visible by default, `html.js`-gated) so prerender,
 no-JS, and full-page captures never show blank sections. All AT-01…AT-07 remain PASS
 (AT-01 EXCEPTION as before).
+
+## Login feature (2026-10-16, owner chose full scope with documented risks)
+
+Rendered check: new `#login` section + console login fieldset reuse token styles only —
+no new palette, no gradients, no decoration. Axe still 0 violations both routes, QA
+0px overflow all viewports. Verified: unit 6/6, fixture 6/6 live, API 8/8 live
+(same-site guard message exact, password absent from job.json). AT-01…AT-07 PASS.

@@ -13,6 +13,8 @@ Paste a URL → real Chromium walks the site → one full-page screenshot per se
 - `tools/extract-design.ts` — Phase 0: `npm run extract-design -- <reference-url>`
 - `tools/measure-bands.ts`, `tools/axe-check.ts`, `tools/visual-qa.ts` — A4/A11/A13 evidence
 - `tools/spa-fixture.ts` — A5: real-browser SPA client-routing verification (fixture + capture pipeline)
+- `tools/login-fixture.ts` — login step verification (correct/wrong creds, no-form page, challenge markers, no-leak)
+- `tools/login-api-check.ts` — login API checks (`SW_TOKEN=... npx tsx tools/login-api-check.ts [base]`)
 - `tools/extract-fonts.ts` → `design/fonts.md` — reference @font-face evidence
 - `tools/make-og.ts`, `tools/side-by-side.ts` — OG card generator + A14 side-by-side sheets (`design/qa/side-by-side-*.png`)
 - `tools/api-state-test.ts` — §9.3 console states against a live server (`SW_TOKEN=... npx tsx tools/api-state-test.ts [base] [--rate-limit]`)
@@ -44,6 +46,32 @@ npx tsx tools/smoke-public.ts   # A1/A6/A7 on the public URL + prints A8 peak me
 ```
 
 6. A8: Railway → service → Metrics, run a 12-section job, confirm peak memory < 460 MB (guard is 500 MB-class; Hobby if it exceeds).
+
+## Login capture (owner decision 2026-10-16: full scope, risks documented here)
+
+The console accepts optional per-run credentials for sites with a plain email +
+password form. The agent fills and submits the form in the same real browser, then
+captures with the resulting session. A failed login never blocks the run — it is
+logged (`login.failed` + code) and capture continues with whatever is public.
+
+Guarantees (tested in `tests/server/login.test.ts` + `tools/login-fixture.ts`):
+- Passwords live in server memory only (`server/jobs/secrets.ts`), single-use, deleted
+  on use. Never in `job.json`, logs, SSE, ZIP, or the API. `settings.auth` on disk holds
+  username + login page only.
+- A custom login page must share the entry URL's origin (enforced server-side, 400
+  otherwise) — credentials can never be posted to an unrelated host.
+- CAPTCHAs / Cloudflare challenges are DETECTED and reported (`BOT_CHALLENGE`), never
+  solved or bypassed. A persistent challenge captures nothing.
+- MFA/OTP, passkeys, multi-step and SSO logins are unsupported and report `LOGIN_FAILED`.
+
+Accepted risks (owner's explicit call — do not silently widen this):
+- Google and other big providers often flag server-IP sign-ins as suspicious; this can
+  challenge or temporarily lock the account. Use a dedicated account, never a main one.
+  The mechanism is generic form-fill — no per-provider solver exists or is promised.
+- Credentials cross the network to the Railway container (TLS) and sit in its memory
+  for seconds. Only run this against sites/accounts you own or may use.
+- Only simple forms work. Anything else fails loudly with its reason — verify failures
+  in the console log instead of assuming a capture is "logged in".
 
 ## Env (names only — values in Railway, never committed)
 

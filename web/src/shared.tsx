@@ -55,6 +55,7 @@ export function SiteHeader({ consoleLink }: { consoleLink: boolean }): React.Rea
         <nav className="site-nav" aria-label="Primary">
           <a className="nav-link hide-sm" href="/#how">How it works</a>
           <a className="nav-link hide-sm" href="/#sample">Sample</a>
+          <a className="nav-link hide-sm" href="/#login">Login</a>
           <a className="nav-link hide-sm" href="/#limits">Limits</a>
           <a className="nav-link hide-sm" href="/#faq">FAQ</a>
           {consoleLink && (
@@ -84,6 +85,7 @@ export function SiteFooter({ retentionHours }: { retentionHours: number }): Reac
           <p className="eyebrow">Product</p>
           <a href="/#how">How a run works</a>
           <a href="/#sample">What comes back</a>
+          <a href="/#login">Sites with login</a>
           <a href="/#limits">Controls and limits</a>
         </nav>
         <nav aria-label="Console">

@@ -12,6 +12,8 @@ import { launchBrowser, getMemoryMB, isOverGuard } from "../agent/browser.js";
 import { discoverSections } from "../agent/discover.js";
 import { captureSection } from "../agent/capture.js";
 import { writeJob, readJob, logEvent, jobDir, type Job } from "../jobs/store.js";
+import { stashPassword, takePassword, dropPassword } from "../jobs/secrets.js";
+import { attemptLogin } from "../agent/login.js";
 import { enqueue, isBusy, hourlyAllowed, recordEnqueue } from "../jobs/queue.js";
 
 const CreateBody = z.object({
@@ -19,6 +21,13 @@ const CreateBody = z.object({
   maxSections: z.number().int().min(1).max(12).optional(),
   viewport: z.enum(["desktop", "mobile"]).optional(),
   format: z.enum(["webp", "png"]).optional(),
+  // Optional per-run credentials. Password is held in memory only
+  // (server/jobs/secrets.ts), never written to the job file or logs.
+  auth: z.object({
+    username: z.string().min(1).max(320),
+    password: z.string().min(1).max(1024),
+    loginUrl: z.string().min(1).max(2048).optional(),
+  }).optional(),
 });
 
 function authed(req: FastifyRequest): boolean {
@@ -56,6 +65,27 @@ async function runJob(id: string): Promise<void> {
       if (shouldBlockRequestUrl(route.request().url())) return route.abort("blockedbyclient");
       return route.continue();
     });
+    // Optional per-run login. The password is single-use from the memory
+    // vault; only the username and outcome codes are ever logged.
+    if (job.settings.auth) {
+      const pw = takePassword(id);
+      if (!pw) {
+        logEvent(job, "login.skipped", "credentials unavailable in memory (server restarted?) — continuing without login");
+      } else {
+        const loginPage = await ctx.newPage();
+        try {
+          await loginPage.goto(job.settings.auth.loginUrl ?? job.url, { waitUntil: "domcontentloaded", timeout: config.NAV_WAIT_MS });
+          const lr = await attemptLogin(loginPage, { username: job.settings.auth.username, password: pw });
+          logEvent(job, lr.ok ? "login.ok" : "login.failed", lr.ok ? `as ${job.settings.auth.username}` : `${lr.code} ${lr.detail}`);
+        } catch (e) {
+          logEvent(job, "login.failed", `LOGIN_FAILED ${(e instanceof Error ? e.message : String(e)).slice(0, 200)}`);
+        } finally {
+          await loginPage.close().catch(() => {});
+        }
+      }
+      dropPassword(id);
+      await writeJob(job);
+    }
     const probe = await ctx.newPage();
     const sections = await (async () => {
       try {
@@ -140,6 +170,17 @@ export async function registerJobRoutes(app: FastifyInstance): Promise<void> {
     if (isBusy()) return reply.code(429).send({ error: { code: "BUSY", message: "One job at a time. Try again shortly." } });
     const check = await validateEntryUrl(parsed.data.url);
     if (!check.ok) return reply.code(check.code === "URL_INVALID" ? 400 : 403).send({ error: { code: check.code, message: check.message } });
+    // Credential guard: a custom login page must share the entry's origin,
+    // otherwise the password could be posted to an unrelated host.
+    let loginUrl: string | undefined;
+    if (parsed.data.auth?.loginUrl) {
+      const loginCheck = await validateEntryUrl(parsed.data.auth.loginUrl);
+      if (!loginCheck.ok) return reply.code(loginCheck.code === "URL_INVALID" ? 400 : 403).send({ error: { code: loginCheck.code, message: "Login page: " + loginCheck.message } });
+      if (loginCheck.url.origin !== check.url.origin) {
+        return reply.code(400).send({ error: { code: "URL_INVALID", message: "Login page must be on the same site as the entry URL." } });
+      }
+      loginUrl = loginCheck.url.toString();
+    }
     const id = crypto.randomUUID();
     const job: Job = {
       id,
@@ -148,6 +189,7 @@ export async function registerJobRoutes(app: FastifyInstance): Promise<void> {
         maxSections: Math.min(parsed.data.maxSections ?? config.MAX_SECTIONS, config.MAX_SECTIONS),
         viewport: parsed.data.viewport ?? config.DEFAULT_VIEWPORT,
         format: parsed.data.format ?? config.DEFAULT_FORMAT,
+        ...(parsed.data.auth ? { auth: { username: parsed.data.auth.username, ...(loginUrl ? { loginUrl } : {}) } } : {}),
       },
       status: "queued",
       steps: [],
@@ -155,6 +197,7 @@ export async function registerJobRoutes(app: FastifyInstance): Promise<void> {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
+    if (parsed.data.auth) stashPassword(id, parsed.data.auth.password);
     logEvent(job, "job.queued", job.url);
     await writeJob(job);
     recordEnqueue(session);

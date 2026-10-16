@@ -72,11 +72,16 @@ export function Console(): React.ReactElement {
   });
   const [token, setToken] = React.useState("");
   const [showToken, setShowToken] = React.useState(false);
+  const [showPass, setShowPass] = React.useState(false);
   const [url, setUrl] = React.useState("");
   const [urlError, setUrlError] = React.useState<string | null>(null);
   const [viewport, setViewport] = React.useState<"desktop" | "mobile">("desktop");
   const [format, setFormat] = React.useState<"webp" | "png">("webp");
   const [maxSec, setMaxSec] = React.useState(12);
+  const [loginUrl, setLoginUrl] = React.useState("");
+  const [authUser, setAuthUser] = React.useState("");
+  const [authPass, setAuthPass] = React.useState("");
+  const [authConsent, setAuthConsent] = React.useState(false);
   const [limits, setLimits] = React.useState<Limits | null>(null);
   const [steps, setSteps] = React.useState<Step[]>([]);
   const [shots, setShots] = React.useState<Shot[]>([]);
@@ -254,13 +259,44 @@ export function Console(): React.ReactElement {
       setUrlError(friendly("URL_BLOCKED", ""));
       return;
     }
+    // Optional login: all-or-nothing (username + password + consent).
+    const wantsAuth = authUser.trim() !== "" || authPass !== "" || loginUrl.trim() !== "";
+    let auth: { username: string; password: string; loginUrl?: string } | undefined;
+    if (wantsAuth) {
+      if (authUser.trim() === "" || authPass === "") {
+        setUrlError("Login needs both a username and a password — or leave all login fields empty.");
+        return;
+      }
+      let loginPage: string | undefined;
+      if (loginUrl.trim() !== "") {
+        try {
+          const lp = new URL(loginUrl.trim());
+          if (lp.protocol !== "http:" && lp.protocol !== "https:") throw new Error("bad scheme");
+          if (lp.origin !== parsed.origin) {
+            setUrlError("The login page must be on the same site as the URL being captured.");
+            return;
+          }
+          loginPage = lp.toString();
+        } catch {
+          setUrlError("That login page URL doesn't look valid.");
+          return;
+        }
+      }
+      if (!authConsent) {
+        setUrlError("Confirm the login consent checkbox to use your credentials for this run.");
+        return;
+      }
+      auth = { username: authUser.trim(), password: authPass, ...(loginPage ? { loginUrl: loginPage } : {}) };
+    }
     setUrlError(null);
     setPhase({ kind: "starting" });
     const r = await api("/api/jobs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: parsed.toString(), viewport, format, maxSections: maxSec }),
+      body: JSON.stringify({ url: parsed.toString(), viewport, format, maxSections: maxSec, ...(auth ? { auth } : {}) }),
     });
+    setAuthPass(""); // password leaves component state the moment it is sent
+    setShowPass(false);
     if (r.ok && typeof r.body === "object" && r.body !== null && "id" in r.body) {
       const id = (r.body as { id: string }).id;
       pushHistory(id, parsed.toString(), "queued");
@@ -402,9 +438,50 @@ export function Console(): React.ReactElement {
           </div>
           <button className="btn" type="submit">Walk the site</button>
         </form>
+        <form aria-label="Login (optional)" style={{ maxWidth: 560, marginTop: 8 }} onSubmit={start}>
+          <fieldset style={{ border: "1px solid var(--border)", borderRadius: 12, padding: "16px" }}>
+            <legend style={{ fontSize: 13, padding: "0 8px" }}>Login (optional) — simple email + password forms</legend>
+            <div className="field">
+              <label htmlFor="login-url">Login page URL (optional, same site — defaults to the URL above)</label>
+              <input
+                id="login-url" type="url" value={loginUrl} onChange={(e) => { setLoginUrl(e.target.value); setUrlError(null); }}
+                placeholder="https://example.com/login" inputMode="url"
+              />
+            </div>
+            <div className="form-row cols2">
+              <div className="field">
+                <label htmlFor="auth-user">Username or email</label>
+                <input id="auth-user" type="text" value={authUser} onChange={(e) => { setAuthUser(e.target.value); setUrlError(null); }} autoComplete="username" />
+              </div>
+              <div className="field">
+                <label htmlFor="auth-pass">Password</label>
+                <input
+                  id="auth-pass" type={showPass ? "text" : "password"} value={authPass}
+                  onChange={(e) => { setAuthPass(e.target.value); setUrlError(null); }} autoComplete="current-password"
+                />
+              </div>
+            </div>
+            <div className="field" style={{ flexDirection: "row", alignItems: "center", gap: 10, display: "flex" }}>
+              <input
+                id="auth-consent" type="checkbox" checked={authConsent} onChange={(e) => setAuthConsent(e.target.checked)}
+                style={{ width: 20, height: 20, minHeight: 0, accentColor: "var(--ink)" }}
+              />
+              <label htmlFor="auth-consent" style={{ fontSize: 13 }}>
+                This is my own account (or I have permission), and I accept that MFA/OTP, Google
+                sign-in blocks, and CAPTCHAs may fail the login — failures are reported, never faked.
+              </label>
+            </div>
+            <div className="btn-row" style={{ marginTop: 0 }}>
+              <button className="btn btn-ghost" type="button" onClick={() => setShowPass((s) => !s)} aria-pressed={showPass}>
+                {showPass ? "Hide password" : "Show password"}
+              </button>
+            </div>
+          </fieldset>
+        </form>
         <p className="notice" style={{ marginTop: 24, maxWidth: 560 }}>
-          Capture only sites you own or have permission to capture. Private addresses, login walls,
-          and bot-blocked pages are refused or reported — never faked.
+          Passwords are used once for the run and never stored — not in logs, job files, or the
+          ZIP. Capture only sites and accounts you own or have permission to capture. Private
+          addresses, login walls, and bot-blocked pages are refused or reported — never faked.
         </p>
         {history.length > 0 && (
           <section aria-labelledby="hist-h" style={{ marginTop: 32 }}>
