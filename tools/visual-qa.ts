@@ -21,6 +21,22 @@ for (const [page_, w, h] of [
   const pg = await browser.newPage({ viewport: { width: w, height: h } });
   await pg.goto(base + page_, { waitUntil: "domcontentloaded", timeout: 30000 });
   await pg.waitForTimeout(2000);
+  // Scroll pass so reveal-on-scroll sections reach their visible state before capture.
+  // Instant behavior: the page uses smooth scrolling for anchor links, which would
+  // make a timed scroll pass stall before reaching the lower sections.
+  await pg.evaluate(async () => {
+    document.documentElement.style.scrollBehavior = "auto";
+    const h = document.body.scrollHeight;
+    const step = 600;
+    for (let y = 0; y < h; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 60));
+    }
+    window.scrollTo(0, h);
+    await new Promise((r) => setTimeout(r, 500));
+    window.scrollTo(0, 0);
+    await new Promise((r) => setTimeout(r, 400));
+  });
   const overflow = await pg.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 1) defects.push(`${tag}: horizontal overflow ${overflow}px`);
   await pg.screenshot({ path: `${out}/${tag}.png`, fullPage: true, animations: "disabled" });

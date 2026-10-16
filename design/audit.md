@@ -12,3 +12,15 @@
 
 Evidence: design/tokens-*.json + design/ref/*.png + design/tokens.md.
 Font substitution: tokens.md (Waldenburg → Archivo provisional, M6 side-by-side).
+
+## Frontend upgrade recheck (2026-10-16, this session)
+
+New components (badges, progress, cards, stats, sticky nav, lightbox, FAQ accordions,
+reveal-on-scroll) reuse token values only — no new palette, no gradients, no Inter
+beyond the AT-01 exception, no emoji/decoration. Rendered check: axe 0 violations
+(`/` 45 checks, `/app` 30), visual QA 0px overflow at 1440/834/390, full landing
++ console gate + live console journey (14/14: gate → idle → live → detach →
+history → reopen → lightbox → ZIP → delete) reviewed as screenshots.
+Reveal is progressive enhancement (visible by default, `html.js`-gated) so prerender,
+no-JS, and full-page captures never show blank sections. All AT-01…AT-07 remain PASS
+(AT-01 EXCEPTION as before).

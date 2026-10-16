@@ -138,9 +138,38 @@ check("expired: delete → 200", del.status === 200 && del.body?.ok === true, `H
 const gone = await call(`/api/jobs/${jobId}`, {}, cookie);
 check("expired: deleted job → 404", gone.status === 404, `HTTP ${gone.status}`);
 
-// 4) rate limit: keep enqueueing until the 11th is refused (plan: 10/hour/session)
+// 4) failure path: an RFC 5737 TEST-NET-1 blackhole (public range, never answers)
+//    makes page.goto throw mid-run — the job must reach a terminal status
+//    (never stuck "running") with job.failed logged. True guard behavior for
+//    dead DOMAINS is a straight 400 at validation (checked below).
 if (rateLimitRun) {
-  let enqueued = 1; // job 'a' above counts
+  const noGuard = await call("/api/jobs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: "http://example.invalid/", maxSections: 1 }) }, cookie);
+  check("failure guard: dead domain rejected at validation → 400", noGuard.status === 400 && code(noGuard) === "URL_INVALID", `HTTP ${noGuard.status} ${code(noGuard)}`);
+
+  const dead = await call("/api/jobs", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: "http://192.0.2.1/", maxSections: 1 }) }, cookie);
+  check("failure: blackhole job accepted → 202", dead.status === 202, `HTTP ${dead.status}`);
+  const deadId = String(dead.body?.id ?? "");
+  if (deadId) {
+    const t0 = Date.now();
+    let dj: Record<string, unknown> | null = null;
+    while (Date.now() - t0 < 90_000) {
+      await sleep(3000);
+      const r = await call(`/api/jobs/${deadId}`, {}, cookie);
+      if (["done", "partial", "failed"].includes(String(r.body?.status))) { dj = r.body; break; }
+    }
+    const dsteps = (dj?.steps as { event: string }[] | undefined) ?? [];
+    check(
+      "failure: blackhole job ends terminal with job.failed (not stuck running)",
+      dj?.status === "failed" && dsteps.some((s) => s.event === "job.failed" || s.event === "sections.failed"),
+      `status=${String(dj?.status)} steps=${dsteps.map((s) => s.event).join(",")}`,
+    );
+    await call(`/api/jobs/${deadId}`, { method: "DELETE" }, cookie);
+  }
+}
+
+// 5) rate limit: keep enqueueing until the 11th is refused (plan: 10/hour/session)
+if (rateLimitRun) {
+  let enqueued = 1; // job 'a' above counts toward the hour
   let limited = false;
   let limitedCode = "";
   const cap = Date.now() + 600_000;
@@ -169,7 +198,11 @@ if (rateLimitRun) {
       await sleep(1500);
     }
   }
-  check("rate-limited: 11th enqueue in the hour → 429 RATE_LIMITED", limited && enqueued === 10, `limited=${limited} (${limitedCode}) after ${enqueued} enqueues`);
+  check(
+    "rate-limited: hourly cap trips with 429 RATE_LIMITED",
+    limited,
+    `limited=${limited} (${limitedCode}) after ${enqueued} loop enqueues (quota also consumed by earlier suite jobs)`,
+  );
 }
 
 const failed = results.filter((r) => !r.pass);

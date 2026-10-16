@@ -33,11 +33,19 @@ async function runJob(id: string): Promise<void> {
   logEvent(job, "job.started", job.url);
   await writeJob(job);
   const deadline = Date.now() + config.MAX_JOB_SECONDS * 1000;
-  const browser = await launchBrowser();
-  logEvent(job, "browser.opened", "playwright chromium");
-  await writeJob(job);
-  let peak = 0;
+  let browser: Awaited<ReturnType<typeof launchBrowser>> | undefined;
+  // Every failure path must end with a terminal status in the job file —
+  // otherwise clients poll (and SSE waits) forever (plan §9.3).
+  const failJob = async (msg: string): Promise<void> => {
+    if (["done", "partial", "failed"].includes(job.status)) return;
+    job.status = "failed";
+    logEvent(job, "job.failed", msg);
+    await writeJob(job);
+  };
   try {
+    browser = await launchBrowser();
+    logEvent(job, "browser.opened", "playwright chromium");
+    await writeJob(job);
     const ctx = await browser.newContext({
       viewport: job.settings.viewport === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 900 },
       deviceScaleFactor: 1,
@@ -49,18 +57,33 @@ async function runJob(id: string): Promise<void> {
       return route.continue();
     });
     const probe = await ctx.newPage();
-    await probe.goto(job.url, { waitUntil: "domcontentloaded", timeout: config.NAV_WAIT_MS });
-    try {
-      await probe.waitForLoadState("load", { timeout: 15000 });
-    } catch { /* heavy pages stream forever — proceed with what rendered */ }
-    await probe.waitForTimeout(2500);
-    const sections = (await discoverSections(probe, job.url)).slice(0, job.settings.maxSections);
+    const sections = await (async () => {
+      try {
+        await probe.goto(job.url, { waitUntil: "domcontentloaded", timeout: config.NAV_WAIT_MS });
+        try {
+          await probe.waitForLoadState("load", { timeout: 15000 });
+        } catch { /* heavy pages stream forever — proceed with what rendered */ }
+        await probe.waitForTimeout(2500);
+        return (await discoverSections(probe, job.url)).slice(0, job.settings.maxSections);
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logEvent(job, "sections.failed", msg.slice(0, 300));
+        job.status = "failed";
+        logEvent(job, "job.failed", `discovery failed: ${msg.slice(0, 200)}`);
+        await writeJob(job);
+        await probe.close().catch(() => {});
+        await ctx.close().catch(() => {});
+        return null;
+      }
+    })();
+    if (!sections) return;
     logEvent(job, "sections.discovered", `${sections.length}: ${sections.map((s) => s.name).join(" | ")}`);
     await probe.close().catch(() => {});
     await writeJob(job);
 
     const shotsDir = path.join(jobDir(id), "shots");
     await fs.mkdir(shotsDir, { recursive: true });
+    let peak = 0;
     let ok = 0;
     let diskBytes = 0;
     for (let i = 0; i < sections.length; i++) {
@@ -94,8 +117,16 @@ async function runJob(id: string): Promise<void> {
     job.status = ok === 0 ? "failed" : ok < sections.length ? "partial" : "done";
     logEvent(job, "job.done", `${ok}/${sections.length} captured, peak ${peak}MB`);
     await writeJob(job);
+  } catch (e) {
+    // Abort path (watchdog abort, OOM kill of the browser, unexpected throw): the
+    // capture loop may have already set a terminal status — keep it; otherwise fail.
+    await failJob(
+      e instanceof Error
+        ? `run aborted: ${e.message.slice(0, 200)}`
+        : "run aborted",
+    );
   } finally {
-    await browser.close().catch(() => {});
+    if (browser) await browser.close().catch(() => {});
   }
 }
 
