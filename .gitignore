@@ -1,0 +1,14 @@
+node_modules/
+dist/
+server/dist/
+web/dist/
+web/node_modules/
+DATA/
+data/
+design/ref/
+design/tokens-*.json
+*.log
+.env
+.DS_Store
+playwright-report/
+test-results/
