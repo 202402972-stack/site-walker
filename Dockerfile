@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
-RUN npm run build && npm prune --omit=dev
+RUN npm run build:all && npm prune --omit=dev
 ENV NODE_ENV=production DATA_DIR=/data
 EXPOSE 8080
 CMD ["node", "dist/server/index.js"]

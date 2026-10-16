@@ -6,6 +6,7 @@ web/node_modules/
 DATA/
 data/
 design/ref/
+design/qa/
 design/tokens-*.json
 *.log
 .env

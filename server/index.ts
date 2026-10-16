@@ -8,6 +8,7 @@ import fs from "node:fs";
 import { config } from "./config.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerJobRoutes } from "./routes/jobs.js";
+import { registerConfigRoute } from "./routes/config.js";
 import { retentionSweep } from "./jobs/store.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
@@ -29,6 +30,9 @@ await app.register(helmet, {
 const dist = path.join(process.cwd(), "web", "dist");
 if (fs.existsSync(dist)) {
   await app.register(fastifyStatic, { root: dist, prefix: "/" });
+  // Console entry (noindex via app.html meta + robots). Registered before SPA fallback.
+  app.get("/app", async (_req, reply) => reply.sendFile("app.html"));
+  app.get("/app/", async (_req, reply) => reply.sendFile("app.html"));
   app.setNotFoundHandler(async (req, reply) => {
     if (req.url.startsWith("/api/")) return reply.code(404).send({ error: { code: "URL_INVALID", message: "Not found." } });
     return reply.sendFile("index.html");
@@ -39,6 +43,7 @@ app.get("/healthz", async () => ({ ok: true, product: config.PRODUCT_NAME }));
 
 await registerAuthRoutes(app);
 await registerJobRoutes(app);
+await registerConfigRoute(app);
 
 // Retention sweep hourly.
 setInterval(() => {

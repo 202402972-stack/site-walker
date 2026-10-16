@@ -8,10 +8,6 @@ const running = { current: false };
 const queue: { id: string; run: Runner }[] = [];
 const perSession = new Map<string, number[]>();
 
-export function canEnqueue(): boolean {
-  return queue.length < 3 && !running.current ? true : queue.length < 3;
-}
-
 export function queueDepth(): number {
   return queue.length;
 }

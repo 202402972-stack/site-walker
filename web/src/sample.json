@@ -1,0 +1,72 @@
+{
+  "target": "https://join.elevenlabs.io/agents/architect",
+  "date": "2026-10-16",
+  "status": "done",
+  "steps": [
+    {
+      "event": "job.queued",
+      "detail": "https://join.elevenlabs.io/agents/architect"
+    },
+    {
+      "event": "browser.opened",
+      "detail": "playwright chromium"
+    },
+    {
+      "event": "job.started",
+      "detail": "https://join.elevenlabs.io/agents/architect"
+    },
+    {
+      "event": "sections.discovered",
+      "detail": "2: Full page | Build better agents, just by talking or typing"
+    },
+    {
+      "event": "section.started",
+      "detail": "1/2 Full page https://join.elevenlabs.io/agents/architect"
+    },
+    {
+      "event": "section.captured",
+      "detail": "Full page 00-full-page.webp 1440x9474 601KB"
+    },
+    {
+      "event": "section.started",
+      "detail": "2/2 Build better agents, just by talking or typing https://join.elevenlabs.io/agents/architect"
+    },
+    {
+      "event": "section.captured",
+      "detail": "Build better agents, just by talking or typing 01-build-better-agents-just-by-talking-or-t.webp 1440x9474 595KB +element"
+    },
+    {
+      "event": "job.done",
+      "detail": "2/2 captured, peak 0MB"
+    }
+  ],
+  "shots": [
+    {
+      "name": "Full page",
+      "kind": "fullpage",
+      "file": "00-full-page.webp",
+      "width": 1440,
+      "height": 9474,
+      "bytes": 615796,
+      "element": null
+    },
+    {
+      "name": "Build better agents, just by talking or typing",
+      "kind": "anchor",
+      "file": "01-build-better-agents-just-by-talking-or-t.webp",
+      "width": 1440,
+      "height": 9474,
+      "bytes": 609200,
+      "element": "01-build-better-agents-just-by-talking-or-t-element.webp"
+    },
+    {
+      "name": "Sound Effects",
+      "kind": "sitemap",
+      "file": "sound-effects.webp",
+      "width": 1440,
+      "height": 8617,
+      "bytes": 632332,
+      "element": null
+    }
+  ]
+}
