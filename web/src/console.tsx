@@ -255,7 +255,7 @@ export function Console(): React.ReactElement {
         {steps.map((s, i) => (
           <div key={i}>
             <span className="t">{s.t ? new Date(s.t).toLocaleTimeString() : i}</span>{" "}
-            <span className={s.event.includes("failed") || s.event.includes("timeout") ? "ev-bad" : "ev-ok"}>{s.event}</span>{" "}
+            <span className={s.event.includes("failed") || s.event.includes("timeout") || s.event.includes("interrupted") ? "ev-bad" : "ev-ok"}>{s.event}</span>{" "}
             {s.detail}
           </div>
         ))}

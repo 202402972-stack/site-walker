@@ -12,6 +12,11 @@ Paste a URL → real Chromium walks the site → one full-page screenshot per se
 - `tools/run-agent.ts` — M1 CLI: `npm run agent:run -- --url https://example.com`
 - `tools/extract-design.ts` — Phase 0: `npm run extract-design -- <reference-url>`
 - `tools/measure-bands.ts`, `tools/axe-check.ts`, `tools/visual-qa.ts` — A4/A11/A13 evidence
+- `tools/spa-fixture.ts` — A5: real-browser SPA client-routing verification (fixture + capture pipeline)
+- `tools/extract-fonts.ts` → `design/fonts.md` — reference @font-face evidence
+- `tools/make-og.ts`, `tools/side-by-side.ts` — OG card generator + A14 side-by-side sheets (`design/qa/side-by-side-*.png`)
+- `tools/api-state-test.ts` — §9.3 console states against a live server (`SW_TOKEN=... npx tsx tools/api-state-test.ts [base] [--rate-limit]`)
+- `tools/smoke-public.ts` — post-deploy smoke on the Railway URL (A1/A6/A7/A8 evidence)
 
 ## Commands
 
@@ -24,6 +29,21 @@ npm run build:all            # server + web + prerender (canonical build; Docker
 npm run dev:server           # needs ADMIN_TOKEN, SESSION_SECRET env
 npm run agent:run -- --url https://example.com --viewport desktop --format webp
 ```
+
+## Deploy (Railway — owner steps, ~15 min)
+
+1. Railway → **New Project → Deploy from GitHub repo** → `202402972-stack/site-walker` (private is fine; grant Railway repo access). Builder is Dockerfile (`railway.json`), healthcheck `/healthz`.
+2. Add a **Volume** mounted at `/data` (job store survives restarts + deploys).
+3. Set service **Variables**: `ADMIN_TOKEN` (long random), `SESSION_SECRET` (long random), `DATA_DIR=/data`. Optional overrides: `MAX_SECTIONS`, `MAX_JOB_SECONDS`, `MAX_PAGE_HEIGHT`, `NAV_WAIT_MS`, `MEM_GUARD_MB`, `RETENTION_HOURS`, `PUBLIC_BASE_URL`.
+4. **Networking → Generate Domain**, then set `PUBLIC_BASE_URL=https://<domain>` (canonical/OG/sitemap self-correct at boot either way) and redeploy.
+5. Smoke-test the public URL from the repo:
+
+```powershell
+$env:BASE = "https://<domain>"; $env:SW_TOKEN = "<ADMIN_TOKEN>"
+npx tsx tools/smoke-public.ts   # A1/A6/A7 on the public URL + prints A8 peak memory when reported
+```
+
+6. A8: Railway → service → Metrics, run a 12-section job, confirm peak memory < 460 MB (guard is 500 MB-class; Hobby if it exceeds).
 
 ## Env (names only — values in Railway, never committed)
 
@@ -46,5 +66,8 @@ Rotate `ADMIN_TOKEN`: set the new value in Railway variables and redeploy; sessi
 ## HANDOFF (2026-10-17)
 
 - State: M1 agent verified (reveal pass 39.6%→8.3% blank, count-ups render, element captures work), M2 API verified end-to-end (auth, SSRF 403s, SSE, shots, ZIP, DELETE, restart survival, retention sweep, login rate limit), M3 tokens extracted, M4 landing+console built from tokens with prerender, M5 real sample assets, M6 axe clean / QA clean / Lighthouse desktop 1.0.
+- A5: SPA client-routing verified with a real-browser fixture (`tools/spa-fixture.ts` — pushState proven, late 800 ms content captured in-frame on all 4 routes; server-logged document requests for /about = 0). Static multi-page (sitemap descent) and one-pager (anchors + element close-ups) verified earlier against join.elevenlabs.io.
+- §9.3 states: exercised live via `tools/api-state-test.ts` (gate 401, invalid 400, blocked 403, busy 429, streamed running → done, shots + ZIP, gone 404, rate-limited 429 after 10/hour). Orphaned jobs from a killed process are now marked failed at boot (`recoverStaleJobs`, unit-tested).
+- A15: clean checkout verified from the GitHub repo into an empty directory — `npm ci` → typechecks → tests 8/8 → `build:all` → complete `web/dist`.
 - Blocked on owner: Railway project + volume + env vars + domain (M0 container checks A1/A8, M7 deploy), fidelity side-by-side sign-off (A14). Portfolio/GitHub footer links not supplied.
-- Next: deploy per §11.3, run public-URL smoke test, get A14 sign-off.
+- Next: deploy per §11.3, run `tools/smoke-public.ts` against the public URL, get A14 sign-off.

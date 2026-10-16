@@ -50,7 +50,7 @@ Note: desktop run did not surface the `--anim-*` vars (cross-origin stylesheet w
 - **KMR Waldenburg Buch/Normal (display/headings): SUBSTITUTE.** Commercial family (KMR), no open license → cannot embed.
   Provisional substitute: **Archivo** (OFL, grotesque skeleton, variable 100–900 covers measured 375/400/700).
   Verification required in M6: rendered side-by-side vs `design/ref/` (x-height, width, weight match); owner sign-off per A14. If metrics mismatch, fall back to measured comparison of alternatives.
-- `@font-face` source URLs / license files not yet extracted (cross-origin CSS wall) — fetch CSS by URL before M4 font wiring.
+- `@font-face` sources extracted by URL fetch (`design/fonts.md`, 2026-10-16): reference declares 126 faces across **KMR Waldenburg** variants (display), **Inter / Inter Variable** (body/UI) and Lato placeholders — confirms the KMR decision above with file-level evidence. M4 wired Inter Variable + Archivo via Fontsource, both self-hosted (no third-party font CDN at runtime).
 
 ## Known intentional differences (not hidden)
 

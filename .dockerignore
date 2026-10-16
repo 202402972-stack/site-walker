@@ -1,0 +1,14 @@
+node_modules
+data
+dist
+web/dist
+.git
+.gitignore
+design/ref
+design/qa
+design/tokens-*.json
+*.log
+.env
+playwright-report
+test-results
+professional-craft.md

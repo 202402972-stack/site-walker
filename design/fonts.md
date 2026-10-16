@@ -1,0 +1,411 @@
+# Reference @font-face evidence
+
+Fetched https://join.elevenlabs.io/agents/architect on 2026-10-16.
+Stylesheets: 0 external, inline styles present.
+
+## Families declared (18)
+
+- KMR Waldenburg Normal Regular (5 faces)
+- Lato (2 faces)
+- KMR Waldenburg Buch Regular (3 faces)
+- Inter (84 faces)
+- KMR Waldenburg Buch (3 faces)
+- KMR Waldenburg Fett Regular (2 faces)
+- Inter Variable (14 faces)
+- Lato Placeholder (1 faces)
+- KMR Waldenburg Normal Regular Placeholder (1 faces)
+- Inter Placeholder (1 faces)
+- KMR Waldenburg Fett Regular Placeholder (1 faces)
+- Inter Variable Placeholder (1 faces)
+- KMR Waldenburg Buch Regular Regular (1 faces)
+- KMR Waldenburg Normal (2 faces)
+- KMR Waldenburg Normal Regular Regular (1 faces)
+- KMR Waldenburg Fett Halbschmal Regular (1 faces)
+- KMR Waldenburg (1 faces)
+- Waldenburg (2 faces)
+
+## Faces
+
+- KMR Waldenburg Normal Regular
+  - src: https://framerusercontent.com/assets/g7ADWQWUt6SUj5hvqlgzjXWeViU.woff2
+  - from: (inline)
+- Lato
+  - src: https://fonts.gstatic.com/s/lato/v25/S6uyw4BMUTPHjxAwXjeu.woff2
+  - from: (inline)
+- Lato
+  - src: https://fonts.gstatic.com/s/lato/v25/S6uyw4BMUTPHjx4wXg.woff2
+  - from: (inline)
+- KMR Waldenburg Normal Regular
+  - src: https://framerusercontent.com/assets/JuxW6RdAlTy42UCM70u40Wwqd74.woff2
+  - from: (inline)
+- KMR Waldenburg Buch Regular
+  - src: https://framerusercontent.com/assets/Toe7zDlzANlaFNFnx4sgqJue88.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/5vvr9Vy74if2I6bQbJvbw7SY1pQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/EOr0mi4hNtlgWNn9if640EZzXCo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/Y9k9QrlZAqio88Klkmbd8VoMQc.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/OYrD2tBIBPvoJXiIHnLoOXnY9M.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/JeYwfuaPfZHQhEG8U5gtPDZ7WQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/GrgcKwrN6d3Uz8EwcLHZxwEfC4.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/b6Y37FthZeALduNqHicBT6FutY.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/DpPBYI0sL4fYLgAkX8KXOPVt7c.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/4RAEQdEOrcnDkhHiiCbJOw92Lk.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/1K3W8DizY3v4emK8Mb08YHxTbs.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/tUSCtfYVM1I1IchuyCwz9gDdQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/VgYFWiwsAC5OYxAycRXXvhze58.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/syRNPWzAMIrcJ3wIlPIP43KjQs.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/GIryZETIX4IFypco5pYZONKhJIo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/H89BbHkbHDzlxZzxi8uPzTsp90.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/u6gJwDuwB143kpNK1T1MDKDWkMc.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/43sJ6MfOPh1LCJt46OvyDuSbA6o.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/wccHG0r4gBDAIRhfHiOlq6oEkqw.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/WZ367JPwf9bRW6LdTHN8rXgSjw.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/ia3uin3hQWqDrVloC1zEtYHWw.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/2A4Xx7CngadFGlVV4xrO06OBHY.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/CfMzU8w2e7tHgF4T4rATMPuWosA.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/867QObYax8ANsfX4TGEVU9YiCM.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/Oyn2ZbENFdnW7mt2Lzjk1h9Zb9k.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/cdAe8hgZ1cMyLu9g005pAW3xMo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/DOfvtmE1UplCq161m6Hj8CSQYg.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/pKRFNWFoZl77qYCAIp84lN1h944.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/tKtBcDnBMevsEEJKdNGhhkLzYo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/BkDpl4ghaqvMi1btKFyG2tdbec.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/zAMK70AQRFSShJgUiaR5IiIhgzk.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/IETjvc5qzUaRoaruDpPSwCUM8.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/oLCoaT3ioA0fHdJnWR9W6k7NY.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/Sj0PCHQSBjFmEp6NBWg6FNaKc.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/aqiiD4LUKkKzXdjGL5UzHq8bo5w.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/H4TfENUY1rh8R9UaSD6vngjJP3M.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/5A3Ce6C9YYmCjpQx9M4inSaKU.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/Qx95Xyt0Ka3SGhinnbXIGpEIyP4.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/6mJuEAguuIuMog10gGvH5d3cl8.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/xYYWaj7wCU5zSQH0eXvSaS19wo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/otTaNuNpVK4RbdlT7zDDdKvQBA.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/UjlFhCnUjxhNfep4oYBPqnEssyo.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/DolVirEGb34pEXEp8t8FQBSK4.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/khkJkwSL66WFg8SX6Wa726c.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/0E7IMbDzcGABpBwwqNEt60wU0w.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/NTJ0nQgIF0gcDelS14zQ9NR9Q.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/QrcNhgEPfRl0LS8qz5Ln8olanl8.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/JEXmejW8mXOYMtt0hyRg811kHac.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/Bo5CNzBv77CafbxOtKIkpw9egw.woff2
+  - from: (inline)
+- Inter
+  - src: https://framerusercontent.com/assets/uy9s0iWuxiNnVt8EpTI3gzohpwo.woff2
+  - from: (inline)
+- KMR Waldenburg Buch
+  - src: https://framerusercontent.com/assets/kSGqxoVyLkJxkbPfEcmwbK43Qk.woff2
+  - from: (inline)
+- KMR Waldenburg Fett Regular
+  - src: https://framerusercontent.com/assets/VQKTzWAjZbFbKriCawG4ad0unYY.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/mYcqTSergLb16PdbJJQMl9ebYm4.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/ZRl8AlxwsX1m7xS1eJCiSPbztg.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/nhSQpBRqFmXNUBY2p5SENQ8NplQ.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/DYHjxG0qXjopUuruoacfl5SA.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/s7NH6sl7w4NU984r5hcmo1tPSYo.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/7lw0VWkeXrGYJT05oB3DsFy8BaY.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://framerusercontent.com/assets/wx5nfqEgOXnxuFaxB0Mn9OhmcZA.woff2
+  - from: (inline)
+- Lato Placeholder
+  - src: (no url src)
+  - from: (inline)
+- KMR Waldenburg Normal Regular Placeholder
+  - src: (no url src)
+  - from: (inline)
+- Inter Placeholder
+  - src: (no url src)
+  - from: (inline)
+- KMR Waldenburg Fett Regular Placeholder
+  - src: (no url src)
+  - from: (inline)
+- Inter Variable Placeholder
+  - src: (no url src)
+  - from: (inline)
+- KMR Waldenburg Buch
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2 | https://framerusercontent.com/assets/Toe7zDlzANlaFNFnx4sgqJue88.woff2
+  - from: (inline)
+- KMR Waldenburg Buch Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2 | https://framerusercontent.com/assets/Toe7zDlzANlaFNFnx4sgqJue88.woff2
+  - from: (inline)
+- KMR Waldenburg Buch Regular Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2 | https://framerusercontent.com/assets/Toe7zDlzANlaFNFnx4sgqJue88.woff2
+  - from: (inline)
+- KMR Waldenburg Normal
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Normal.a6a971764942cc5d.woff2 | https://framerusercontent.com/assets/JuxW6RdAlTy42UCM70u40Wwqd74.woff2
+  - from: (inline)
+- KMR Waldenburg Normal Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Normal.a6a971764942cc5d.woff2 | https://framerusercontent.com/assets/JuxW6RdAlTy42UCM70u40Wwqd74.woff2
+  - from: (inline)
+- KMR Waldenburg Normal Regular Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Normal.a6a971764942cc5d.woff2 | https://framerusercontent.com/assets/JuxW6RdAlTy42UCM70u40Wwqd74.woff2
+  - from: (inline)
+- KMR Waldenburg Normal Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2 | https://framerusercontent.com/assets/Toe7zDlzANlaFNFnx4sgqJue88.woff2
+  - from: (inline)
+- KMR Waldenburg Fett Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Fett.5cf9bb4c8e2fe353.woff2 | https://framerusercontent.com/assets/VQKTzWAjZbFbKriCawG4ad0unYY.woff2
+  - from: (inline)
+- KMR Waldenburg Fett Halbschmal Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-FettHalbschmal.76c570718e05a201.woff2 | https://framerusercontent.com/assets/0dARRo5aNcixMUWzVFllW00mRBM.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/BkDpl4ghaqvMi1btKFyG2tdbec.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/zAMK70AQRFSShJgUiaR5IiIhgzk.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/IETjvc5qzUaRoaruDpPSwCUM8.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/oLCoaT3ioA0fHdJnWR9W6k7NY.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/Sj0PCHQSBjFmEp6NBWg6FNaKc.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/aqiiD4LUKkKzXdjGL5UzHq8bo5w.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/H4TfENUY1rh8R9UaSD6vngjJP3M.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/5vvr9Vy74if2I6bQbJvbw7SY1pQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/EOr0mi4hNtlgWNn9if640EZzXCo.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/Y9k9QrlZAqio88Klkmbd8VoMQc.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/OYrD2tBIBPvoJXiIHnLoOXnY9M.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/JeYwfuaPfZHQhEG8U5gtPDZ7WQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/GrgcKwrN6d3Uz8EwcLHZxwEfC4.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/b6Y37FthZeALduNqHicBT6FutY.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/DpPBYI0sL4fYLgAkX8KXOPVt7c.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/4RAEQdEOrcnDkhHiiCbJOw92Lk.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/1K3W8DizY3v4emK8Mb08YHxTbs.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/tUSCtfYVM1I1IchuyCwz9gDdQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/VgYFWiwsAC5OYxAycRXXvhze58.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/syRNPWzAMIrcJ3wIlPIP43KjQs.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/GIryZETIX4IFypco5pYZONKhJIo.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/5A3Ce6C9YYmCjpQx9M4inSaKU.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/Qx95Xyt0Ka3SGhinnbXIGpEIyP4.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/6mJuEAguuIuMog10gGvH5d3cl8.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/xYYWaj7wCU5zSQH0eXvSaS19wo.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/otTaNuNpVK4RbdlT7zDDdKvQBA.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/UjlFhCnUjxhNfep4oYBPqnEssyo.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/DolVirEGb34pEXEp8t8FQBSK4.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/mYcqTSergLb16PdbJJQMl9ebYm4.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/ZRl8AlxwsX1m7xS1eJCiSPbztg.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/nhSQpBRqFmXNUBY2p5SENQ8NplQ.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/DYHjxG0qXjopUuruoacfl5SA.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/s7NH6sl7w4NU984r5hcmo1tPSYo.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/7lw0VWkeXrGYJT05oB3DsFy8BaY.woff2
+  - from: (inline)
+- Inter Variable
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/wx5nfqEgOXnxuFaxB0Mn9OhmcZA.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/ba9851c3c22cd980-s.woff2 | https://framerusercontent.com/assets/mkY5Sgyq51ik0AMrSBwhm9DJg.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/21350d82a1f187e9-s.woff2 | https://framerusercontent.com/assets/X5hj6qzcHUYv7h1390c8Rhm6550.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/c5fe6dc8356a8c31-s.woff2 | https://framerusercontent.com/assets/gQhNpS3tN86g8RcVKYUUaKt2oMQ.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/19cfc7226ec3afaa-s.woff2 | https://framerusercontent.com/assets/cugnVhSraaRyANCaUtI5FV17wk.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/8e9860b6e62d6359-s.woff2 | https://framerusercontent.com/assets/5HcVoGak8k5agFJSaKa4floXVu0.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/e4af272ccee01ff0-s.p.woff2 | https://framerusercontent.com/assets/rZ5DdENNqIdFTIyQQiP5isO7M.woff2
+  - from: (inline)
+- Inter
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/media/df0a9ae256c0569c-s.woff2 | https://framerusercontent.com/assets/P2Bw01CtL0b9wqygO0sSVogWbo.woff2
+  - from: (inline)
+- KMR Waldenburg Buch
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2
+  - from: (inline)
+- KMR Waldenburg Buch Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2
+  - from: (inline)
+- KMR Waldenburg
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2
+  - from: (inline)
+- KMR Waldenburg Normal
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Normal.a6a971764942cc5d.woff2
+  - from: (inline)
+- KMR Waldenburg Normal Regular
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Normal.a6a971764942cc5d.woff2
+  - from: (inline)
+- Waldenburg
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Buch.831cafac9cdc8d0a.woff2
+  - from: (inline)
+- Waldenburg
+  - src: https://eleven-public-cdn.elevenlabs.io/marketing_website/_next/static/chunks/src/app/_ui/fonts/waldenburg/KMR-Waldenburg-Fett-latin.e6b0db8ee0a63897.woff2
+  - from: (inline)
+
+## Brand-name mentions in fetched CSS
+
+- "Waldenburg" found
+- "Inter" found

@@ -65,6 +65,27 @@ export function logEvent(job: Job, event: string, detail?: string): void {
   job.steps.push({ t: new Date().toISOString(), event, detail });
 }
 
+// Mark queued/running jobs as failed at boot — the process that owned them is gone
+// (plan §9.3: a job must never appear stuck "running" forever after a restart).
+export async function recoverStaleJobs(): Promise<string[]> {
+  const recovered: string[] = [];
+  let entries: string[] = [];
+  try {
+    entries = await fs.readdir(jobsDir());
+  } catch {
+    return recovered;
+  }
+  for (const id of entries) {
+    const job = await readJob(id);
+    if (!job || (job.status !== "queued" && job.status !== "running")) continue;
+    job.status = "failed";
+    logEvent(job, "job.interrupted", "server restarted while this job was not finished");
+    await writeJob(job);
+    recovered.push(id);
+  }
+  return recovered;
+}
+
 // Delete jobs older than RETENTION_HOURS. Returns deleted ids.
 export async function retentionSweep(): Promise<string[]> {
   const deleted: string[] = [];
