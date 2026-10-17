@@ -13,8 +13,8 @@ Paste a URL → real Chromium walks the site → one full-page screenshot per se
 - `tools/extract-design.ts` — Phase 0: `npm run extract-design -- <reference-url>`
 - `tools/measure-bands.ts`, `tools/axe-check.ts`, `tools/visual-qa.ts` — A4/A11/A13 evidence
 - `tools/spa-fixture.ts` — A5: real-browser SPA client-routing verification (fixture + capture pipeline)
-- `tools/login-fixture.ts` — login loop verification (12 live checks: correct/wrong creds, no-form, MFA screen, persistent + self-clearing interstitials, embedded captcha widget, SSO hand-off, cred-leak scan)
-- `tools/login-api-check.ts` — login API checks (`SW_TOKEN=... npx tsx tools/login-api-check.ts [base]`)
+- `tools/login-fixture.ts` — login loop verification (19 live checks: correct/wrong creds, no-form, MFA screen, persistent + self-clearing interstitials, embedded captcha widget, SSO hand-off, iframe, shadow-DOM, phone, div-button, SPA swap, Arabic lockout, saved-session replay, cred-leak scan)
+- `tools/login-api-check.ts` — login + saved-session API checks (`SW_TOKEN=... npx tsx tools/login-api-check.ts [base]`)
 - `tools/extract-fonts.ts` → `design/fonts.md` — reference @font-face evidence
 - `tools/make-og.ts`, `tools/side-by-side.ts` — OG card generator + A14 side-by-side sheets (`design/qa/side-by-side-*.png`)
 - `tools/api-state-test.ts` — §9.3 console states against a live server (`SW_TOKEN=... npx tsx tools/api-state-test.ts [base] [--rate-limit]`)
@@ -62,18 +62,44 @@ Guarantees (tested in `tests/server/login.test.ts` + `tools/login-fixture.ts`):
 - A custom login page must share the entry URL's origin (enforced server-side, 400
   otherwise) — credentials can never be posted to an unrelated host.
 - The login agent is a bounded multi-step loop (90 s budget, ≤ 3 form submits): it
-  fills whatever screen appears — username-only first steps, user+password, SSO-less
-  redirects — with layered field discovery (accessible names → CSS → fallbacks),
-  human-like typing, and four submit strategies. Wrong credentials fail honestly
+  fills whatever screen appears — username-only first steps, user+password, phone
+  logins, iframe-hosted forms (fields are discovered across every frame), shadow-DOM
+  components, `<div role="button">` submits, and JS-only form swaps (the post-submit
+  wait is adaptive: URL change / form appearing or vanishing ends it early) — with
+  layered field discovery (accessible names → CSS → fallbacks), human-like typing and
+  mouse paths, and five submit strategies. Wrong credentials fail honestly
   (`LOGIN_FAILED`).
 - CAPTCHAs are split honestly: a challenge WIDGET inside the site's own form (reCAPTCHA
   box, Turnstile) never blocks the run — the site's fields are filled and the site's
   button pressed, and the provider decides (nothing is ticked or solved). A full-page
   interstitial ("Just a moment…", unusual-traffic walls) gets a bounded self-clear
-  wait, then reports `BOT_CHALLENGE` if it persists. Never bypassed, never faked.
+  wait with gentle pointer activity, then reports `BOT_CHALLENGE` if it persists.
+  Never bypassed, never faked.
 - Second factors (`MFA_REQUIRED`), SSO hand-offs to external providers (`SSO_REDIRECT`,
   guarded against www/subdomain false positives), and lockout walls (`LOGIN_BLOCKED`,
-  attempts stop instead of deepening the lockout) each report their own code.
+  attempts stop instead of deepening the lockout) each report their own code —
+  including non-English copy (Arabic/French/German/Spanish markers).
+
+## Saved sessions — the human-in-the-loop answer to CAPTCHA
+
+The strongest honest move for CAPTCHA-protected sites is to not fight the CAPTCHA:
+the OWNER signs in once in their own browser (solving any challenge as a human),
+exports the site's cookies (cookie-editor extension or a Playwright storageState
+JSON), and imports them in the console. Every later run on that origin starts with
+that session — the human step never repeats, and nothing is solved by the service.
+
+- Storage: `DATA_DIR/sessions/<id>.json` — AES-256-GCM with a scrypt-derived key
+  from `SESSION_SECRET`; metadata only in the clear. Listings, logs, jobs and the
+  API never carry cookie values. Delete anytime in the console; sessions older than
+  `SESSION_RETENTION_DAYS` (default 14) are pruned at boot and hourly.
+- Imports are host-filtered: cookies whose domain does not belong to the site's own
+  host are dropped (400 when none remain), and the payload is size-capped
+  (`MAX_SESSION_BYTES`, default 256 KB).
+- Sessions are saved/refreshed automatically after a successful password login, and
+  when a saved session was used in a run (cookie rotation keeps them alive).
+- Tests: `tests/server/sessions.test.ts` (encryption at rest, tamper fails closed,
+  host filtering, pruning), fixture replay into a real browser context, and live
+  API checks (`tools/login-api-check.ts`).
 
 Accepted risks (owner's explicit call — do not silently widen this):
 - Google and other big providers often flag server-IP sign-ins as suspicious; this can
@@ -81,12 +107,15 @@ Accepted risks (owner's explicit call — do not silently widen this):
   The mechanism is generic form-fill — no per-provider solver exists or is promised.
 - Credentials cross the network to the Railway container (TLS) and sit in its memory
   for seconds. Only run this against sites/accounts you own or may use.
-- Only simple forms work. Anything else fails loudly with its reason — verify failures
-  in the console log instead of assuming a capture is "logged in".
+- Saved sessions are live credentials: anyone with the token + server access can use
+  them. They are encrypted with `SESSION_SECRET` (rotating it invalidates them) and
+  pruned on a schedule — still, only import sessions you are willing to store.
+- Unsupported shapes fail loudly with their reason — verify failures in the console
+  log instead of assuming a capture is "logged in".
 
 ## Env (names only — values in Railway, never committed)
 
-`ADMIN_TOKEN SESSION_SECRET DATA_DIR MAX_SECTIONS MAX_JOB_SECONDS MAX_PAGE_HEIGHT NAV_WAIT_MS MEM_GUARD_MB RETENTION_HOURS PUBLIC_BASE_URL`
+`ADMIN_TOKEN SESSION_SECRET DATA_DIR MAX_SECTIONS MAX_JOB_SECONDS MAX_PAGE_HEIGHT NAV_WAIT_MS MEM_GUARD_MB RETENTION_HOURS PUBLIC_BASE_URL SESSION_RETENTION_DAYS MAX_SESSION_BYTES`
 
 Rotate `ADMIN_TOKEN`: set the new value in Railway variables and redeploy; sessions are HMAC-signed, old cookies die with `SESSION_SECRET` rotation. Roll back: Railway → Deployments → redeploy the last good deployment. Results are disposable (24 h retention).
 

@@ -51,3 +51,38 @@ Rewritten as a bounded multi-step loop with a blocker/embedded challenge split
   a self-clearing interstitial completing a real login), API 8/8 live against the
   rebuilt server. Frontend unchanged this pass — axe/QA evidence from 2026-10-16
   stands. AT-01…AT-07 PASS.
+
+## Login agent v3 + saved sessions (2026-10-17)
+
+- v3: frame-aware discovery (`server/agent/login/frames.ts` — iframe-hosted forms,
+  capped at 8 frames), shadow-DOM piercing (Playwright locators + a deep-text
+  walker for challenge/signal detection), adaptive post-submit settle (URL change /
+  password-field-count change ends the wait; quiet exit otherwise), human-ish
+  interaction (hover + mouse path + jitter before clicks, key-by-key typing),
+  phone (`type=tel`) logins, `<div role=button>` submits, multilingual markers
+  (ar/fr/de/es), IDP list extended.
+- Saved sessions (`server/jobs/sessions.ts` + `/api/sessions*`): the human-in-the-
+  loop answer to CAPTCHA — owner signs in once in their own browser and imports
+  the cookies; runs for that origin start with the session. AES-256-GCM at rest
+  (scrypt key from SESSION_SECRET), host-filtered imports, size cap, 14-day
+  retention with boot+hourly pruning, console UI (list/import/delete, paste
+  cleared after import), jobs save/refresh the session after a successful login.
+- Verified this pass: unit 36/36 (5 files), fixture 19/19 live real-browser
+  (incl. saved-session replay into a real context and in-frame fill @f1), API
+  13/13 live (incl. host-filtered import, ciphertext-at-rest scan, delete),
+  axe 0 violations both routes, QA 0px overflow all viewports (console includes
+  the new Saved-sessions section). AT-01…AT-07 PASS.
+
+## CAPTCHA policy — the line, restated (2026-10-17)
+
+Maximum honest effort, no false promises:
+- Never clicked, solved, ticked, or bypassed: widgets are left untouched even when
+  embedded in the site's own form; full-page interstitials only get a bounded
+  self-clear wait. No solver integrations, no fingerprint-spoofing suites, no
+  fake-human attestations.
+- What IS done: realistic interaction (mouse paths, typing rhythm, adaptive
+  settle), managed-challenge self-clear waits with pointer activity, challenge
+  widgets inside the site's form never blocking the run, and saved-session replay
+  so a human's single solve stays solved for automated runs.
+- Everything else reports a labeled code and is verified in the console log
+  first — never faked into a "successful" capture.

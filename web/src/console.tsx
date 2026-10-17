@@ -62,6 +62,132 @@ function loadHistory(): HistItem[] {
   } catch { return []; }
 }
 
+interface SessionMeta {
+  id: string;
+  origin: string;
+  savedAt: string;
+  cookieCount: number;
+  label?: string;
+}
+
+/**
+ * Saved sessions — the human-in-the-loop answer to CAPTCHA-protected logins.
+ * The owner signs in once in their own browser (solving any challenge as a
+ * human), exports the cookies, imports them here; runs on the site reuse the
+ * session automatically. Nothing is ever solved by the service itself.
+ */
+function SavedSessions(): React.ReactElement {
+  const [items, setItems] = React.useState<SessionMeta[]>([]);
+  const [busy, setBusy] = React.useState(false);
+  const [msg, setMsg] = React.useState<string | null>(null);
+  const [importUrl, setImportUrl] = React.useState("");
+  const [importJson, setImportJson] = React.useState("");
+
+  const refresh = React.useCallback(async (): Promise<void> => {
+    const r = await api("/api/sessions");
+    if (r.ok && typeof r.body === "object" && r.body !== null && Array.isArray((r.body as { sessions?: unknown }).sessions)) {
+      setItems((r.body as { sessions: SessionMeta[] }).sessions);
+    } else {
+      setItems([]); // not signed in yet — stay quiet
+    }
+  }, []);
+  React.useEffect(() => { void refresh(); }, [refresh]);
+
+  const doImport = async (): Promise<void> => {
+    setMsg(null);
+    if (!importUrl.trim() || !importJson.trim()) {
+      setMsg("Both the site URL and the exported cookies JSON are required.");
+      return;
+    }
+    let state: unknown;
+    try { state = JSON.parse(importJson); } catch { setMsg("The pasted text is not valid JSON."); return; }
+    setBusy(true);
+    const r = await api("/api/sessions/import", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url: importUrl.trim(), state }),
+    });
+    setBusy(false);
+    if (r.ok) {
+      const dropped = (r.body as { droppedCookies?: number } | null)?.droppedCookies ?? 0;
+      setMsg(`Session saved${dropped ? ` — ${dropped} cookies for other sites were dropped` : ""}. Future runs on this site use it automatically.`);
+      setImportJson(""); // the paste can contain live session secrets — clear it
+      void refresh();
+    } else {
+      const m = typeof r.body === "object" && r.body !== null && "error" in r.body
+        ? (r.body as { error: { message?: string } }).error.message
+        : undefined;
+      setMsg(m ?? "Import was rejected.");
+    }
+  };
+
+  const remove = async (id: string): Promise<void> => {
+    setBusy(true);
+    const r = await api(`/api/sessions/${id}`, { method: "DELETE" });
+    setBusy(false);
+    if (r.ok) { setMsg("Session deleted."); void refresh(); }
+  };
+
+  return (
+    <section aria-labelledby="sessions-h" style={{ marginTop: 24, maxWidth: 560 }}>
+      <h3 id="sessions-h" style={{ fontSize: 14 }}>Saved sessions — for sites with CAPTCHA or tough logins</h3>
+      <p className="muted" style={{ fontSize: 13, marginTop: 4 }}>
+        Sign in once in <em>your own browser</em> — solving any CAPTCHA as a human — then export
+        the site&apos;s cookies (a cookie-editor extension, or a Playwright storageState file) and
+        import them here. Runs on this site reuse the session automatically. Stored encrypted on
+        the server; delete anytime.
+      </p>
+      {items.length > 0 && (
+        <ul className="steps5" style={{ padding: 0 }}>
+          {items.map((s) => (
+            <li key={s.id}>
+              <span className="n" aria-hidden="true">·</span>
+              <span>
+                <div style={{ overflowWrap: "anywhere" }}>{s.origin}</div>
+                <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                  {s.cookieCount} cookies · saved {new Date(s.savedAt).toLocaleString()}
+                  {s.label ? ` · ${s.label}` : ""}
+                </div>
+                <div className="btn-row" style={{ marginTop: 8 }}>
+                  <button className="btn btn-ghost" type="button" disabled={busy} onClick={() => void remove(s.id)}>
+                    Delete
+                  </button>
+                </div>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <details style={{ marginTop: 12 }}>
+        <summary style={{ cursor: "pointer", fontSize: 14 }}>Import a session</summary>
+        <div className="field" style={{ marginTop: 12 }}>
+          <label htmlFor="sess-url">Site URL</label>
+          <input
+            id="sess-url" type="url" inputMode="url" value={importUrl}
+            onChange={(e) => { setImportUrl(e.target.value); setMsg(null); }}
+            placeholder="https://example.com"
+          />
+        </div>
+        <div className="field">
+          <label htmlFor="sess-json">Exported cookies JSON</label>
+          <textarea
+            id="sess-json" rows={5} value={importJson}
+            onChange={(e) => { setImportJson(e.target.value); setMsg(null); }}
+            placeholder={'{"cookies":[{"name":"…","value":"…","domain":".example.com","path":"/"}]}'}
+            style={{ fontFamily: "monospace", fontSize: 12 }}
+          />
+        </div>
+        <div className="btn-row" style={{ marginTop: 0 }}>
+          <button className="btn" type="button" disabled={busy} onClick={() => void doImport()}>
+            Import session
+          </button>
+        </div>
+      </details>
+      {msg && <p className="notice" style={{ marginTop: 12 }}>{msg}</p>}
+    </section>
+  );
+}
+
 export function Console(): React.ReactElement {
   const [phase, setPhase] = React.useState<Phase>(() => {
     if (typeof sessionStorage !== "undefined") {
@@ -483,6 +609,7 @@ export function Console(): React.ReactElement {
           ZIP. Capture only sites and accounts you own or have permission to capture. Private
           addresses, login walls, and bot-blocked pages are refused or reported — never faked.
         </p>
+        <SavedSessions />
         {history.length > 0 && (
           <section aria-labelledby="hist-h" style={{ marginTop: 32 }}>
             <h2 id="hist-h">Recent runs on this device</h2>

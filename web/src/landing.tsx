@@ -171,6 +171,12 @@ export function Landing({ limits, sample }: { limits: Limits; sample: SampleRun 
               resulting session. A failed login never blocks the run — it is logged with its reason
               and capture continues with whatever is public.
             </p>
+            <p>
+              For sites protected by CAPTCHA or tough challenges, there is nothing to bypass —
+              solve it once yourself. Sign in once in your own browser, export the session, and
+              import it in the console: every later run on that site reuses it, so the human step
+              never repeats.
+            </p>
             <div className="card" style={{ marginTop: 16 }}>
               <h3>Works with</h3>
               <p className="muted" style={{ marginBottom: 0 }}>Plain email + password forms on the same site.</p>

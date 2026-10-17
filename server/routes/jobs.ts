@@ -14,6 +14,7 @@ import { captureSection } from "../agent/capture.js";
 import { writeJob, readJob, logEvent, jobDir, type Job } from "../jobs/store.js";
 import { stashPassword, takePassword, dropPassword } from "../jobs/secrets.js";
 import { attemptLogin } from "../agent/login.js";
+import { loadSession, playwrightState, saveSession, type StorageState } from "../jobs/sessions.js";
 import { enqueue, isBusy, hourlyAllowed, recordEnqueue } from "../jobs/queue.js";
 
 const CreateBody = z.object({
@@ -55,12 +56,30 @@ async function runJob(id: string): Promise<void> {
     browser = await launchBrowser();
     logEvent(job, "browser.opened", "playwright chromium");
     await writeJob(job);
+    // Saved-session replay: if the owner imported (or a previous run saved) a
+    // login session for this origin, the context starts with it — CAPTCHA/
+    // login walls that the human already passed are simply not hit again.
+    const origin = new URL(job.url).origin;
+    let savedUsed = false;
+    let savedSession: StorageState | null = null;
+    try {
+      savedSession = await loadSession(origin);
+    } catch {
+      savedSession = null;
+    }
     const ctx = await browser.newContext({
       viewport: job.settings.viewport === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 900 },
       deviceScaleFactor: 1,
       serviceWorkers: "block",
       acceptDownloads: false,
+      ...(savedSession ? { storageState: playwrightState(savedSession) } : {}),
     });
+    if (savedSession) {
+      savedUsed = true;
+      logEvent(job, "session.used", `${savedSession.cookies.length} saved cookies applied for ${origin}`);
+      await writeJob(job);
+    }
+    let loginOk = false;
     await ctx.route("**/*", async (route) => {
       if (shouldBlockRequestUrl(route.request().url())) return route.abort("blockedbyclient");
       return route.continue();
@@ -84,6 +103,7 @@ async function runJob(id: string): Promise<void> {
           // Trail is credential-free by construction (tests enforce it).
           const meta = lr.ok ? `as ${job.settings.auth.username}` : `${lr.code} ${lr.detail}`;
           logEvent(job, lr.ok ? "login.ok" : "login.failed", `${meta} [${lr.trail.join(" | ")}]`.slice(0, 400));
+          loginOk = lr.ok;
         } catch (e) {
           logEvent(job, "login.failed", `LOGIN_FAILED ${(e instanceof Error ? e.message : String(e)).slice(0, 200)}`);
         } finally {
@@ -92,6 +112,22 @@ async function runJob(id: string): Promise<void> {
       }
       dropPassword(id);
       await writeJob(job);
+    }
+    // Persist/refresh the session for this origin — after a successful login,
+    // or when a saved session was used (NASA-style long sessions rotate
+    // cookies server-side; re-saving keeps the session alive). Encrypted at
+    // rest; only counts are ever logged.
+    if (loginOk || savedUsed) {
+      try {
+        const st = await ctx.storageState();
+        if (st.cookies.length > 0) {
+          await saveSession(origin, st);
+          logEvent(job, "session.saved", `${st.cookies.length} cookies stored (encrypted at rest) for ${origin}`);
+          await writeJob(job);
+        }
+      } catch {
+        /* session persistence is best-effort — never fail the run for it */
+      }
     }
     const probe = await ctx.newPage();
     const sections = await (async () => {

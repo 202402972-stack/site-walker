@@ -14,6 +14,7 @@ import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { launchBrowser } from "../server/agent/browser.js";
 import { attemptLogin, type LoginResult } from "../server/agent/login.js";
+import { deleteSessionForOrigin, loadSession, playwrightState, saveSession } from "../server/jobs/sessions.js";
 
 const USER = "owner@example.com";
 const PASS = "correct-horse-battery";
@@ -310,6 +311,27 @@ try {
   {
     const r = await run("/lockout-ar");
     check("Arabic lockout copy → LOGIN_BLOCKED", !r.ok && r.code === "LOGIN_BLOCKED", `${r.code}: ${r.detail}`);
+  }
+  // 15) Saved-session replay: an imported session is applied by a real
+  // browser context (the human-in-the-loop CAPTCHA answer — the human solved
+  // it once in their own browser; here we prove the vault round-trips into
+  // Playwright and is cleaned from disk afterwards).
+  {
+    const origin = base;
+    await saveSession(origin, {
+      cookies: [{ name: "cf_clearance", value: "FIXTURE-CLEARANCE", domain: "127.0.0.1", path: "/", httpOnly: true }],
+    });
+    const loaded = await loadSession(origin);
+    const ctx = await browser.newContext(loaded ? { storageState: playwrightState(loaded) } : {});
+    const cookies = await ctx.cookies();
+    await ctx.close();
+    await deleteSessionForOrigin(origin);
+    const gone = (await loadSession(origin)) === null;
+    check(
+      "saved session replays into a real browser context",
+      cookies.some((c) => c.name === "cf_clearance" && c.value === "FIXTURE-CLEARANCE") && gone,
+      `${cookies.length} cookies applied, vault cleaned=${gone}`,
+    );
   }
   // 9) Cred-leak scan over every result this harness produced.
   {

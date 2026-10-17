@@ -8,8 +8,10 @@ import fs from "node:fs";
 import { config } from "./config.js";
 import { registerAuthRoutes } from "./routes/auth.js";
 import { registerJobRoutes } from "./routes/jobs.js";
+import { registerSessionRoutes } from "./routes/sessions.js";
 import { registerConfigRoute } from "./routes/config.js";
 import { retentionSweep, recoverStaleJobs } from "./jobs/store.js";
+import { pruneSessions } from "./jobs/sessions.js";
 
 const app = Fastify({ logger: true, trustProxy: true });
 
@@ -57,6 +59,7 @@ app.get("/healthz", async () => ({ ok: true, product: config.PRODUCT_NAME }));
 
 await registerAuthRoutes(app);
 await registerJobRoutes(app);
+await registerSessionRoutes(app);
 await registerConfigRoute(app);
 
 // Orphaned jobs from a previous process are marked failed before we serve traffic.
@@ -64,9 +67,15 @@ recoverStaleJobs()
   .then((ids) => { if (ids.length > 0) app.log.info({ recovered: ids }, "stale jobs marked failed at boot"); })
   .catch(() => {});
 
+// Expired saved sessions are pruned at boot (and hourly with the sweep).
+pruneSessions()
+  .then((n) => { if (n > 0) app.log.info({ pruned: n }, "saved sessions pruned at boot"); })
+  .catch(() => {});
+
 // Retention sweep hourly.
 setInterval(() => {
   retentionSweep().then((d) => { if (d.length > 0) app.log.info({ deleted: d }, "retention sweep"); }).catch(() => {});
+  pruneSessions().catch(() => {});
 }, 3600 * 1000);
 
 const port = config.PORT;

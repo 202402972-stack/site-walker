@@ -24,6 +24,11 @@ export const config = {
   RETENTION_HOURS: num("RETENTION_HOURS", 24),
   // Per-job disk cap (bytes). Plan §8.1: 60 MB.
   MAX_JOB_BYTES: num("MAX_JOB_BYTES", 60 * 1024 * 1024),
+  // Saved login sessions (encrypted at rest; see server/jobs/sessions.ts).
+  // Retention: sessions older than this are pruned at boot and on sweeps.
+  SESSION_RETENTION_DAYS: num("SESSION_RETENTION_DAYS", 14),
+  // Import cap for a session paste (bytes of JSON, before encryption).
+  MAX_SESSION_BYTES: num("MAX_SESSION_BYTES", 256 * 1024),
   // Screenshot defaults
   DEFAULT_VIEWPORT: (process.env.DEFAULT_VIEWPORT ?? "desktop") as "desktop" | "mobile",
   DEFAULT_FORMAT: (process.env.DEFAULT_FORMAT ?? "webp") as "webp" | "png",

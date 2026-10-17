@@ -117,5 +117,58 @@ check(
 );
 await call(`/api/jobs/${id}`, { method: "DELETE" }, cookie);
 
+// ---- Saved sessions API (the human-in-the-loop CAPTCHA answer) ----
+{
+  const imp = await call("/api/sessions/import", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      url: "https://example.com",
+      label: "api check",
+      state: {
+        cookies: [
+          { name: "cf_clearance", value: "API-CHECK-VALUE", domain: ".example.com", path: "/" },
+          { name: "foreign", value: "x", domain: "unrelated.net", path: "/" },
+        ],
+      },
+    }),
+  }, cookie);
+  const sess = (imp.body as { session?: { id?: string; cookieCount?: number }; droppedCookies?: number } | null)?.session;
+  check(
+    "session import accepted, host-filtered",
+    imp.status === 201 && sess?.cookieCount === 1 && (imp.body as { droppedCookies?: number }).droppedCookies === 1,
+    `HTTP ${imp.status} ${JSON.stringify(imp.body).slice(0, 140)}`,
+  );
+  const sid = sess?.id ?? "";
+  if (sid) {
+    const raw = fs.readFileSync(`data/sessions/${sid}.json`, "utf8");
+    check(
+      "imported session encrypted at rest",
+      !raw.includes("API-CHECK-VALUE") && raw.includes("example.com"),
+      `${raw.length} bytes scanned, value absent`,
+    );
+    const list = await call("/api/sessions", {}, cookie);
+    const blob = JSON.stringify(list.body);
+    check(
+      "session listed without values",
+      list.status === 200 && blob.includes("example.com") && !blob.includes("API-CHECK-VALUE"),
+      `HTTP ${list.status}`,
+    );
+    const bad = await call("/api/sessions/import", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ url: "https://example.com", state: { cookies: [{ name: "a", value: "1", domain: "other.net" }] } }),
+    }, cookie);
+    check("import with no site cookies rejected", bad.status === 400, `HTTP ${bad.status}`);
+    const del = await call(`/api/sessions/${sid}`, { method: "DELETE" }, cookie);
+    const listAfter = await call("/api/sessions", {}, cookie);
+    check(
+      "session deleted",
+      del.status === 200 && !JSON.stringify(listAfter.body).includes(sid),
+      `delete HTTP ${del.status}`,
+    );
+  }
+}
+
 console.log(failures.length === 0 ? "LOGIN API: ALL PASS" : `LOGIN API FAILURES: ${failures.join(", ")}`);
 process.exit(failures.length === 0 ? 0 : 1);
