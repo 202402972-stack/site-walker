@@ -1,0 +1,94 @@
+{
+  "base": "http://localhost:8099",
+  "at": "2026-10-16T13:47:59.410Z",
+  "results": [
+    {
+      "name": "healthz",
+      "pass": true
+    },
+    {
+      "name": "gate: unauthenticated POST /api/jobs → 401",
+      "pass": true
+    },
+    {
+      "name": "gate: wrong token → 401",
+      "pass": true
+    },
+    {
+      "name": "gate: token login → 200 + cookie",
+      "pass": true
+    },
+    {
+      "name": "invalid: bad URL → 400 URL_INVALID",
+      "pass": true
+    },
+    {
+      "name": "blocked: loopback → 403",
+      "pass": true
+    },
+    {
+      "name": "blocked: metadata → 403",
+      "pass": true
+    },
+    {
+      "name": "blocked: decimal ip → 403",
+      "pass": true
+    },
+    {
+      "name": "blocked: ipv6 loopback → 403",
+      "pass": true
+    },
+    {
+      "name": "blocked: internal host → 403",
+      "pass": true
+    },
+    {
+      "name": "blocked: file scheme → 403",
+      "pass": true
+    },
+    {
+      "name": "start: real job → 202",
+      "pass": true
+    },
+    {
+      "name": "busy: second job while running → 429 BUSY",
+      "pass": true
+    },
+    {
+      "name": "running: streamed live steps then terminal status",
+      "pass": true
+    },
+    {
+      "name": "done: job completed with a section",
+      "pass": true
+    },
+    {
+      "name": "done: job readable after completion",
+      "pass": true
+    },
+    {
+      "name": "done: shot downloads and matches recorded bytes",
+      "pass": true
+    },
+    {
+      "name": "done: ZIP downloads and contains shot + job.json",
+      "pass": true
+    },
+    {
+      "name": "expired: delete → 200",
+      "pass": true
+    },
+    {
+      "name": "expired: deleted job → 404",
+      "pass": true
+    },
+    {
+      "name": "failure: dead-domain job accepted → 202",
+      "pass": false
+    },
+    {
+      "name": "rate-limited: 11th enqueue in the hour → 429 RATE_LIMITED",
+      "pass": true
+    }
+  ]
+}

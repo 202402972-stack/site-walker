@@ -1,0 +1,1952 @@
+{
+  "elements": {
+    "body": [
+      {
+        "text": "html body { background: var(--token-fa4f",
+        "w": 1440,
+        "h": 9474,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(253, 252, 252)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "h1": [
+      {
+        "text": "Build better agents, just by talking or ",
+        "w": 537,
+        "h": 106,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "44px",
+          "fontWeight": "375",
+          "lineHeight": "52.8px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Build better agents, just by talking or ",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "44px",
+          "fontWeight": "375",
+          "lineHeight": "52.8px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Build better agents, just by talking or ",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "44px",
+          "fontWeight": "375",
+          "lineHeight": "52.8px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "h2": [
+      {
+        "text": "See ElevenAgents Architect \non your agen",
+        "w": 471,
+        "h": 76,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Normal Regular\", sans-serif",
+          "fontSize": "28px",
+          "fontWeight": "400",
+          "lineHeight": "37.8px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "See ElevenAgents Architect\non your agent",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Normal Regular\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "21.6px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "See ElevenAgents Architect\non your agent",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Normal Regular\", sans-serif",
+          "fontSize": "22px",
+          "fontWeight": "400",
+          "lineHeight": "29.7px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Say what's wrong, get a proven fix",
+        "w": 1146,
+        "h": 48,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "375",
+          "lineHeight": "48px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Say what's wrong, get a proven fix",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "375",
+          "lineHeight": "48px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Say what's wrong, get a proven fix",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "40px",
+          "fontWeight": "375",
+          "lineHeight": "48px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "h3": [
+      {
+        "text": "An expert partner for building and itera",
+        "w": 502,
+        "h": 26,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "An expert partner for building and itera",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "An expert partner for building and itera",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Continuously improve your agents",
+        "w": 500,
+        "h": 26,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Continuously improve your agents",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Continuously improve your agents",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Buch Regular\", \"KMR Waldenburg Buch Regular Placeholder\", sans-serif",
+          "fontSize": "18px",
+          "fontWeight": "375",
+          "lineHeight": "25.9992px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "h4": [],
+    "p": [
+      {
+        "text": "Book demo",
+        "w": 75,
+        "h": 21,
+        "style": {
+          "fontFamily": "Inter, \"Inter Placeholder\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "21px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Book demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, \"Inter Placeholder\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "21px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Book demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, \"Inter Placeholder\", sans-serif",
+          "fontSize": "14px",
+          "fontWeight": "400",
+          "lineHeight": "21px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Introducing ElevenAgents Architect",
+        "w": 505,
+        "h": 24,
+        "style": {
+          "fontFamily": "\"KMR Waldenburg Normal Regular\", \"KMR Waldenburg Normal Regular Placeholder\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "letterSpacing": "normal",
+          "color": "rgb(125, 125, 125)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(125, 125, 125)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Architect finds the cause, tests the fix",
+        "w": 537,
+        "h": 48,
+        "style": {
+          "fontFamily": "Inter, \"Inter Placeholder\", sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "letterSpacing": "0.16px",
+          "color": "rgb(102, 102, 102)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(102, 102, 102)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Simulation-tested before you publish",
+        "w": 513,
+        "h": 18,
+        "style": {
+          "fontFamily": "Inter, \"Inter Placeholder\", sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "a": [
+      {
+        "text": "Book demo",
+        "w": 103,
+        "h": 36,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 14px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Book demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 14px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Book demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 14px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Talk with our team",
+        "w": 181,
+        "h": 44,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 20px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Talk with our team",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 20px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "Talk with our team",
+        "w": 181,
+        "h": 44,
+        "style": {
+          "fontFamily": "sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "normal",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 238)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(0, 0, 238)",
+          "boxShadow": "none",
+          "padding": "0px 20px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "8px",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      }
+    ],
+    "button": [
+      {
+        "text": "+1",
+        "w": 82,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "8px 0px 0px 8px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "6px",
+          "textTransform": "none",
+          "transition": "background 0.15s"
+        }
+      },
+      {
+        "text": "Get a personalized demo",
+        "w": 471,
+        "h": 46,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "16px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "15px",
+          "margin": "48px 0px 0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "background 0.2s, opacity 0.2s"
+        }
+      },
+      {
+        "text": "+1",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "8px 0px 0px 8px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "6px",
+          "textTransform": "none",
+          "transition": "background 0.15s"
+        }
+      },
+      {
+        "text": "Get a personalized demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "16px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "15px",
+          "margin": "24px 0px 0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "background 0.2s, opacity 0.2s"
+        }
+      },
+      {
+        "text": "+1",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "8px 0px 0px 8px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "6px",
+          "textTransform": "none",
+          "transition": "background 0.15s"
+        }
+      },
+      {
+        "text": "Get a personalized demo",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "16px",
+          "letterSpacing": "normal",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "9999px",
+          "border": "0px none rgb(255, 255, 255)",
+          "boxShadow": "none",
+          "padding": "15px",
+          "margin": "36px 0px 0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "background 0.2s, opacity 0.2s"
+        }
+      }
+    ],
+    "nav": [],
+    "header": [],
+    "footer": [],
+    "section": [],
+    "input": [
+      {
+        "text": "",
+        "w": 471,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "backgroundImage": "none",
+          "borderRadius": "8px",
+          "border": "1px solid rgb(223, 222, 222)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "border-color 0.15s"
+        }
+      },
+      {
+        "text": "",
+        "w": 471,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "backgroundImage": "none",
+          "borderRadius": "8px",
+          "border": "1px solid rgb(223, 222, 222)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "border-color 0.15s"
+        }
+      },
+      {
+        "text": "",
+        "w": 387,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "borderRadius": "0px 8px 8px 0px",
+          "border": "0px none rgb(0, 0, 0)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "all"
+        }
+      },
+      {
+        "text": "",
+        "w": 471,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "backgroundImage": "none",
+          "borderRadius": "8px",
+          "border": "1px solid rgb(223, 222, 222)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "border-color 0.15s"
+        }
+      },
+      {
+        "text": "",
+        "w": 471,
+        "h": 44,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "backgroundImage": "none",
+          "borderRadius": "8px",
+          "border": "1px solid rgb(223, 222, 222)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "border-color 0.15s"
+        }
+      },
+      {
+        "text": "",
+        "w": 0,
+        "h": 0,
+        "style": {
+          "fontFamily": "Inter, system-ui, sans-serif",
+          "fontSize": "13px",
+          "fontWeight": "400",
+          "lineHeight": "16.9px",
+          "letterSpacing": "normal",
+          "color": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "backgroundImage": "none",
+          "borderRadius": "8px",
+          "border": "1px solid rgb(223, 222, 222)",
+          "boxShadow": "none",
+          "padding": "0px 12px",
+          "margin": "0px",
+          "maxWidth": "none",
+          "gap": "normal",
+          "textTransform": "none",
+          "transition": "border-color 0.15s"
+        }
+      }
+    ]
+  },
+  "fonts": [
+    {
+      "family": "KMR Waldenburg Normal Regular",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Lato",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Lato",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch Regular",
+      "weight": "375",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "italic",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch",
+      "weight": "375",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Fett Regular",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Lato Placeholder",
+      "weight": "normal",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular Placeholder",
+      "weight": "normal",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "Inter Placeholder",
+      "weight": "normal",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "KMR Waldenburg Fett Regular Placeholder",
+      "weight": "normal",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable Placeholder",
+      "weight": "normal",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch",
+      "weight": "375",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch Regular",
+      "weight": "375",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch Regular Regular",
+      "weight": "375",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular",
+      "weight": "400",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular Regular",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular",
+      "weight": "300",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "KMR Waldenburg Fett Regular",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Fett Halbschmal Regular",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "300",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "Inter Variable",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Inter",
+      "weight": "900",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch",
+      "weight": "300 500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Buch Regular",
+      "weight": "300 500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg",
+      "weight": "300 500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal",
+      "weight": "400",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "KMR Waldenburg Normal Regular",
+      "weight": "400",
+      "style": "normal",
+      "status": "loaded"
+    },
+    {
+      "family": "Waldenburg",
+      "weight": "300 500",
+      "style": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "Waldenburg",
+      "weight": "700",
+      "style": "normal",
+      "status": "unloaded"
+    }
+  ],
+  "vars": {
+    "--quote-gradient": "linear-gradient(90deg, #489FD3 30%, #5F8E65 65%)"
+  },
+  "media": [
+    "(min-width: 992px)",
+    "(min-width: 768px) and (max-width: 991.98px)",
+    "(max-width: 767.98px)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(min-width: 768px) and (max-width: 991.98px)",
+    "(max-width: 767.98px)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 1199px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(max-width: 991px) and (min-width: 768px)",
+    "(max-width: 767px) and (min-width: 0)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)",
+    "(hover: hover)",
+    "(hover: none)",
+    "(prefers-reduced-motion: reduce)",
+    "(hover: hover)"
+  ],
+  "keyframes": [
+    "@keyframes lrBarIn { \n  0% { opacity: 0; transform: scaleY(var(--lr-stretch,1.5)); }\n  100% { opacity: 1; transform: scaleY(1); }\n}",
+    "@keyframes lrLetterIn { \n  0% { opacity: 0; }\n  100% { opacity: 1; }\n}",
+    "@keyframes lrBarIn { \n  0% { opacity: 0; transform: scaleY(var(--lr-stretch,1.5)); }\n  100% { opacity: 1; transform: scaleY(1); }\n}",
+    "@keyframes lrLetterIn { \n  0% { opacity: 0; }\n  100% { opacity: 1; }\n}",
+    "@keyframes lrBarIn { \n  0% { opacity: 0; transform: scaleY(var(--lr-stretch,1.5)); }\n  100% { opacity: 1; transform: scaleY(1); }\n}",
+    "@keyframes lrLetterIn { \n  0% { opacity: 0; }\n  100% { opacity: 1; }\n}"
+  ]
+}
