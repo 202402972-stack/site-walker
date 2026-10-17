@@ -1,19 +1,32 @@
 // Login field strategies — resilient discovery, human-like input, and
-// post-submit signal detectors. Nothing here ever returns field VALUES;
-// diagnostics carry selector kinds and counts only (credential hygiene).
-import type { Page } from "playwright";
+// post-submit signal detectors. Anything here can be scoped to a Page or a
+// Frame, so the same strategies work inside iframes.
+//
+// Nothing here ever returns field VALUES; diagnostics carry selector kinds and
+// counts only (credential hygiene). Multilingual markers are intentionally
+// conservative (specific phrases, never single short words) to avoid false
+// positives on ordinary pages.
+import type { Frame, Locator, Page } from "playwright";
 
-// Ordered: accessible selectors first (survive markup rewrites), CSS fallbacks after.
+export type Scope = Page | Frame;
+
+// Ordered: semantic-input types and accessible attributes first (survive
+// markup rewrites), then name/id patterns, then last-resort bare text inputs.
 export const USER_SELECTORS = [
   'input[type="email"]',
+  'input[type="tel"]',
   'input[autocomplete="username"]',
   'input[autocomplete="email"]',
+  'input[autocomplete="tel"]',
   'input[name*="user" i]',
   'input[name*="email" i]',
   'input[name*="login" i]',
+  'input[name*="phone" i]',
+  'input[name*="mobile" i]',
   'input[id*="user" i]',
   'input[id*="email" i]',
   'input[id*="login" i]',
+  'input[id*="phone" i]',
   'input[type="text"]',
 ];
 
@@ -29,6 +42,14 @@ export const MFA_MARKERS: RegExp[] = [
   /enter (the )?code/i,
   /6[-\s]?digit/i,
   /check your (phone|email)/i,
+  // Arabic / French / German / Spanish / Dutch
+  /رمز (التحقق|التأكيد|الدخول)/,
+  /التحقق بخطوتين/,
+  /code de vérification/i,
+  /vérification en deux étapes/i,
+  /Bestätigungscode/i,
+  /código de verificación/i,
+  /verificatiecode/i,
 ];
 
 export const CODE_INPUT_SELECTORS = [
@@ -37,6 +58,8 @@ export const CODE_INPUT_SELECTORS = [
   'input[name*="otp" i]',
   'input[name*="mfa" i]',
   'input[name*="code" i]',
+  'input[name*="token" i]',
+  'input[name*="pin" i]',
 ];
 
 export const LOCKOUT_MARKERS: RegExp[] = [
@@ -46,6 +69,13 @@ export const LOCKOUT_MARKERS: RegExp[] = [
   /try again later/i,
   /suspicious (activity|sign-in)/i,
   /unusual (activity|sign-in)/i,
+  // Arabic / French / German / Spanish
+  /محاولات (كثيرة|عديدة)/,
+  /تم قفل/,
+  /حظر مؤقت/,
+  /trop de tentatives/i,
+  /zu viele Versuche/i,
+  /cuenta (bloqueada|suspendida)/i,
 ];
 
 export const LOGGED_IN_MARKERS: RegExp[] = [
@@ -53,6 +83,11 @@ export const LOGGED_IN_MARKERS: RegExp[] = [
   /log ?out/i,
   /my account/i,
   /account settings/i,
+  // Arabic / French / German
+  /تسجيل (الخروج|خروج)/,
+  /حسابي/,
+  /déconnexion/i,
+  /abmelden/i,
 ];
 
 export const IDP_HOSTS: RegExp[] = [
@@ -66,9 +101,13 @@ export const IDP_HOSTS: RegExp[] = [
   /auth0\.com$/i,
   /onelogin\.com$/i,
   /login\.yahoo\.com$/i,
+  /(^|\.)amazon\.com$/i,
 ];
 
-const SUBMIT_BUTTON_NAMES = /sign in|log in|continue|next|submit|verify/i;
+// Submit controls by accessible name. Multilingual on purpose: a form's
+// button is the single most likely element to differ across locales.
+const SUBMIT_BUTTON_NAMES =
+  /sign in|sign-in|log in|log-in|log on|continue|next|submit|verify|enter|unlock|access|دخول|تسجيل|متابعة|connexion|continuer|se connecter|anmelden|weiter|iniciar sesión|acceder/i;
 
 export interface PageSnapshot {
   html: string;
@@ -76,22 +115,21 @@ export interface PageSnapshot {
   url: string;
 }
 
-export async function snapshot(page: Page): Promise<PageSnapshot> {
-  return {
-    html: await page.content().catch(() => ""),
-    title: await page.title().catch(() => ""),
-    url: page.url(),
-  };
+export async function snapshot(scope: Scope): Promise<PageSnapshot> {
+  const html = await scope.content().catch(() => "");
+  const title = await scope.title().catch(() => "");
+  const url = typeof (scope as Page).url === "function" ? (scope as Page).url() : (scope as Frame).url();
+  return { html, title, url };
 }
 
 function haystack(snap: PageSnapshot): string {
   return `${snap.title}\n${snap.html.slice(0, 200_000)}`;
 }
 
-export async function findField(page: Page, selectors: string[]): Promise<string | null> {
+export async function findField(scope: Scope, selectors: string[]): Promise<string | null> {
   for (const sel of selectors) {
     try {
-      if ((await page.locator(sel).count()) > 0) return sel;
+      if ((await scope.locator(sel).count()) > 0) return sel;
     } catch {
       /* try next */
     }
@@ -100,16 +138,16 @@ export async function findField(page: Page, selectors: string[]): Promise<string
 }
 
 /** Accessible-name lookup (label/placeholder/aria) before falling back to CSS. */
-export async function findUserField(page: Page): Promise<string | null> {
+export async function findUserField(scope: Scope): Promise<string | null> {
   const roles: Array<{ name: RegExp }> = [
-    { name: /^(email|e-mail|username|user name|login|login id|account)$/i },
+    { name: /^(email|e-mail|username|user name|login|login id|account|phone|phone number|mobile|email or phone)$/i },
     { name: /email address/i },
+    { name: /(ة|رقم الهاتف|البريد الإلكتروني|اسم المستخدم)/ },
   ];
   for (const r of roles) {
     try {
-      const loc = page.getByRole("textbox", { name: r.name });
+      const loc = scope.getByRole("textbox", { name: r.name });
       if ((await loc.count()) > 0) {
-        // Resolve to a CSS selector via the element's id/name when possible.
         const handle = await loc.first().elementHandle().catch(() => null);
         const id = handle ? await handle.getAttribute("id").catch(() => null) : null;
         const name = handle ? await handle.getAttribute("name").catch(() => null) : null;
@@ -121,19 +159,21 @@ export async function findUserField(page: Page): Promise<string | null> {
       /* try next */
     }
   }
-  return findField(page, USER_SELECTORS);
+  return findField(scope, USER_SELECTORS);
 }
 
 /**
- * Human-like typing: key-by-key with a small delay (also triggers the JS
- * key listeners many frameworks need), falling back to fill. Returns false
- * when the field cannot be typed into. Never logs the text.
+ * Human-like typing: focus by clicking the field (like a person would), clear
+ * it, then type key-by-key with a small delay (triggers the JS key listeners
+ * many frameworks need), falling back to fill. Returns false when the field
+ * cannot be typed into. Never logs the text.
  */
-export async function humanType(page: Page, selector: string, text: string): Promise<boolean> {
-  const loc = page.locator(selector).first();
+export async function humanType(scope: Scope, selector: string, text: string): Promise<boolean> {
+  const loc = scope.locator(selector).first();
   try {
+    await loc.click({ timeout: 4000 }).catch(() => loc.focus({ timeout: 2000 }).catch(() => {}));
     await loc.fill("", { timeout: 5000 });
-    await loc.pressSequentially(text, { delay: 45, timeout: 20000 });
+    await loc.pressSequentially(text, { delay: 45, timeout: 20_000 });
     return true;
   } catch {
     try {
@@ -145,40 +185,77 @@ export async function humanType(page: Page, selector: string, text: string): Pro
   }
 }
 
+/**
+ * Human-ish click: move the mouse toward the element in a couple of steps with
+ * a small jitter and pause before pressing. Some sites' widgets only arm after
+ * genuine pointer movement over them.
+ */
+export async function humanClick(scope: Scope, loc: Locator): Promise<boolean> {
+  try {
+    const box = await loc.boundingBox().catch(() => null);
+    if (box && box.width > 2 && box.height > 2) {
+      const target = {
+        x: box.x + box.width / 2 + (Math.random() - 0.5) * Math.min(16, box.width * 0.2),
+        y: box.y + box.height / 2 + (Math.random() - 0.5) * Math.min(8, box.height * 0.2),
+      };
+      const page: Page = typeof (scope as Frame).page === "function" ? (scope as Frame).page() : (scope as Page);
+      await page.mouse.move(target.x - 24 - Math.random() * 12, target.y - 14 - Math.random() * 8, { steps: 2 }).catch(() => {});
+      await page.mouse.move(target.x, target.y, { steps: 4 }).catch(() => {});
+      await page.waitForTimeout(40 + Math.random() * 80);
+      await loc.click({ timeout: 5000, delay: 10 + Math.random() * 25 });
+      return true;
+    }
+    await loc.click({ timeout: 5000 });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Submit strategies in order; returns the strategy name used (for diagnostics). */
-export async function submitForm(page: Page, passSelector: string | null): Promise<string> {
-  // 1) Accessible submit button by name.
+export async function submitForm(scope: Scope, passSelector: string | null): Promise<string> {
+  // 1) Accessible submit button by name (covers <div role="button"> widgets).
   try {
-    const btn = page.getByRole("button", { name: SUBMIT_BUTTON_NAMES });
+    const btn = scope.getByRole("button", { name: SUBMIT_BUTTON_NAMES });
     if ((await btn.count()) > 0) {
-      await btn.first().click({ timeout: 5000 });
-      return "button-by-name";
+      if (await humanClick(scope, btn.first())) return "button-by-name";
     }
   } catch {
     /* next strategy */
   }
-  // 2) CSS submit controls.
+  // 2) CSS submit controls, including image submits.
   try {
-    const css = page.locator('button[type="submit"], input[type="submit"]');
+    const css = scope.locator('button[type="submit"], input[type="submit"], input[type="image"]');
     if ((await css.count()) > 0) {
-      await css.first().click({ timeout: 5000 });
-      return "button-css";
+      if (await humanClick(scope, css.first())) return "button-css";
     }
   } catch {
     /* next strategy */
   }
-  // 3) Enter key in the password field.
+  // 3) Any button-ish control whose text looks like a submit (div/a widgets).
+  try {
+    const any = scope.locator('button, [role="button"], a.btn, a.button, a[href="#"]');
+    if ((await any.count()) > 0) {
+      const txt = await any.first().innerText().catch(() => "");
+      if (SUBMIT_BUTTON_NAMES.test(txt)) {
+        if (await humanClick(scope, any.first())) return "button-text";
+      }
+    }
+  } catch {
+    /* next strategy */
+  }
+  // 4) Enter key in the password field.
   if (passSelector) {
     try {
-      await page.locator(passSelector).first().press("Enter", { timeout: 5000 });
+      await scope.locator(passSelector).first().press("Enter", { timeout: 5000 });
       return "enter-key";
     } catch {
       /* next strategy */
     }
   }
-  // 4) Native form submission.
+  // 5) Native form submission.
   try {
-    await page.evaluate(() => {
+    await scope.evaluate(() => {
       const f = document.querySelector("form");
       if (f) {
         if (typeof (f as HTMLFormElement).requestSubmit === "function") (f as HTMLFormElement).requestSubmit();

@@ -4,7 +4,7 @@
 import { describe, it, expect } from "vitest";
 import { classifyBlocker } from "../../server/agent/login/challenges.js";
 import { detectBlocker, detectEmbeddedWidget, detectChallenge } from "../../server/agent/login/markers.js";
-import { detectMfa, detectLockout, detectSsoRedirect } from "../../server/agent/login/forms.js";
+import { detectMfa, detectLockout, detectSsoRedirect, loggedInSignals } from "../../server/agent/login/forms.js";
 import { stashPassword, takePassword, dropPassword } from "../../server/jobs/secrets.js";
 import type { Job } from "../../server/jobs/store.js";
 
@@ -63,11 +63,29 @@ describe("MFA / lockout text detection", () => {
     expect(detectMfa(snap("<p>Welcome, please sign in.</p>")).mfa).toBe(false);
   });
 
+  it("flags second-factor screens in other languages", () => {
+    expect(detectMfa(snap("<p>أدخل رمز التحقق المرسل إلى هاتفك</p>")).mfa).toBe(true);
+    expect(detectMfa(snap("<p>Saisissez le code de vérification envoyé par SMS.</p>")).mfa).toBe(true);
+    expect(detectMfa(snap("<p>Gib den Bestätigungscode ein.</p>")).mfa).toBe(true);
+  });
+
   it("flags lockout and throttling walls", () => {
     expect(detectLockout(snap("<p>Too many attempts. Try again later.</p>"))).toBe(true);
     expect(detectLockout(snap("<p>Your account is temporarily locked.</p>"))).toBe(true);
     expect(detectLockout(snap("<p>We noticed unusual sign-in activity on your account.</p>"))).toBe(true);
     expect(detectLockout(snap("<p>Wrong email or password.</p>"))).toBe(false);
+  });
+
+  it("flags lockout walls in other languages", () => {
+    expect(detectLockout(snap("<p>محاولات كثيرة لتسجيل الدخول. حاول لاحقًا.</p>"))).toBe(true);
+    expect(detectLockout(snap("<p>Trop de tentatives. Réessayez plus tard.</p>"))).toBe(true);
+    expect(detectLockout(snap("<p>Zu viele Versuche. Bitte später erneut versuchen.</p>"))).toBe(true);
+  });
+
+  it("recognizes logged-in signals in other languages", () => {
+    expect(loggedInSignals(snap("<a>تسجيل الخروج</a>"))).toBe(true);
+    expect(loggedInSignals(snap("<a>Déconnexion</a>"))).toBe(true);
+    expect(loggedInSignals(snap("<p>Welcome</p>"))).toBe(false);
   });
 });
 

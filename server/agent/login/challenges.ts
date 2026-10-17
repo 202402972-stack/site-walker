@@ -7,6 +7,7 @@
 // labeled code (`BOT_CHALLENGE`) — never a faked success.
 import type { Page } from "playwright";
 import { detectBlocker } from "./markers.js";
+import { frameSnapshots } from "./frames.js";
 
 /** Shape of a full-page blocker. null = not a blocker. */
 export type BlockerKind = "hard" | "interactive" | "managed";
@@ -36,8 +37,10 @@ export function classifyBlocker(html: string, title: string): BlockerKind | null
 /**
  * Bounded wait for a managed blocker to clear itself (Cloudflare "Just a
  * moment…" spinners and server-check interstitials usually resolve without
- * input in a real browser). Polls every `pollMs` up to `budgetMs`. Returns
- * true when the blocker markers are gone.
+ * input in a real browser). Polls every `pollMs` up to `budgetMs`, checks all
+ * frames, and adds gentle pointer activity between polls — an idle mouse is
+ * itself a bot tell, and some interstitials only re-check on activity.
+ * Returns true when the blocker markers are gone.
  */
 export async function waitForManagedClear(
   page: Page,
@@ -47,15 +50,26 @@ export async function waitForManagedClear(
   const deadline = Date.now() + budgetMs;
   while (Date.now() < deadline) {
     await page.waitForTimeout(pollMs);
-    let html = "";
-    let title = "";
     try {
-      html = await page.content();
-      title = await page.title();
+      const vp = page.viewportSize();
+      if (vp) {
+        await page.mouse.move(
+          vp.width * (0.3 + Math.random() * 0.4),
+          vp.height * (0.3 + Math.random() * 0.4),
+          { steps: 2 },
+        );
+      }
+    } catch {
+      /* pointer activity is best-effort */
+    }
+    let stillBlocked = false;
+    try {
+      const snaps = await frameSnapshots(page);
+      stillBlocked = snaps.some((s) => detectBlocker(s.html, s.title));
     } catch {
       return false;
     }
-    if (!detectBlocker(html, title)) return true;
+    if (!stillBlocked) return true;
   }
   return false;
 }

@@ -54,6 +54,64 @@ const blockers = {
 <script>setTimeout(()=>{document.getElementById("c").textContent="";},1800);</script>`,
 };
 
+// New-shape fixtures (v3): iframe login, shadow-DOM login, phone-number
+// login, div-role=button submit, JS SPA swap without navigation, Arabic
+// lockout copy.
+const IFRAME_HOST = page("Portal", `<h1>Partner portal</h1>
+<iframe src="/login-frame" width="420" height="260" style="border:1px solid #ccc"></iframe>`);
+
+const LOGIN_FRAME = page("Sign in (frame)", `<form method="post" action="/login">
+<label>Email <input type="email" name="username"></label>
+<label>Password <input type="password" name="password"></label>
+<button type="submit">Sign in</button></form>`);
+
+const SHADOW_LOGIN = page("Sign in (shadow DOM)", `<h1>Web-component login</h1>
+<my-login></my-login>
+<script>
+class MyLogin extends HTMLElement {
+  connectedCallback() {
+    const r = this.attachShadow({ mode: "open" });
+    r.innerHTML = '<form method="post" action="/login">' +
+      '<label>Email <input type="email" name="username"></label>' +
+      '<label>Password <input type="password" name="password"></label>' +
+      '<button type="submit">Sign in</button></form>';
+  }
+}
+customElements.define("my-login", MyLogin);
+</script>`);
+
+const PHONE_LOGIN = page("Sign in (phone)", `<h1>Sign in by phone</h1>
+<form method="post" action="/phone-login">
+<label>Phone number <input type="tel" name="phone"></label>
+<label>Password <input type="password" name="password"></label>
+<button type="submit">Sign in</button></form>`);
+
+const DIV_BUTTON_LOGIN = page("Sign in (div button)", `<h1>Sign in</h1>
+<form id="f" method="post" action="/login">
+<label>Email <input type="email" name="username"></label>
+<label>Password <input type="password" name="password"></label>
+<div role="button" tabindex="0" style="display:inline-block;padding:6px 14px;border:1px solid #333;cursor:pointer"
+  onclick="document.getElementById('f').requestSubmit()">Sign in</div>
+</form>`);
+
+const SPA_SLOW = page("Sign in (SPA)", `<h1>Sign in</h1>
+<form id="f"><label>Email <input type="email" name="username"></label>
+<label>Password <input type="password" name="password"></label>
+<button type="submit">Sign in</button></form>
+<div id="app" style="display:none">Welcome back. <a href="#">Sign out</a></div>
+<script>
+document.getElementById("f").addEventListener("submit", (e) => {
+  e.preventDefault();
+  setTimeout(() => {
+    document.getElementById("f").remove();
+    document.getElementById("app").style.display = "block";
+  }, 1200);
+});
+</script>`);
+
+const AR_LOCKOUT = page("تسجيل الدخول", `<h1>تم القفل مؤقتًا</h1>
+<p>محاولات كثيرة لتسجيل الدخول. حاول لاحقًا.</p>`);
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://x");
   const cookies = Object.fromEntries(
@@ -64,12 +122,13 @@ const server = http.createServer((req, res) => {
     res.end(body);
   };
   if (url.pathname === "/login" && req.method === "GET") return html(LOGIN_PAGE(""));
-  if (url.pathname === "/login" && req.method === "POST") {
+  if ((url.pathname === "/login" || url.pathname === "/phone-login") && req.method === "POST") {
     let body = "";
     req.on("data", (c) => { body += c; });
     req.on("end", () => {
       const p = new URLSearchParams(body);
-      if (p.get("username") === USER && p.get("password") === PASS) {
+      const u = p.get("username") ?? p.get("phone");
+      if (u === USER && p.get("password") === PASS) {
         res.writeHead(302, { location: "/app", "set-cookie": "session=1; Path=/; HttpOnly" });
         res.end();
       } else {
@@ -88,6 +147,13 @@ const server = http.createServer((req, res) => {
   if (url.pathname === "/mfa") return html(MFA_PAGE);
   if (url.pathname === "/login-captcha") return html(CAPTCHA_LOGIN);
   if (url.pathname === "/login-sso") return html(SSO_LOGIN);
+  if (url.pathname === "/iframe-login") return html(IFRAME_HOST);
+  if (url.pathname === "/login-frame") return html(LOGIN_FRAME);
+  if (url.pathname === "/shadow-login") return html(SHADOW_LOGIN);
+  if (url.pathname === "/phone-login") return html(PHONE_LOGIN);
+  if (url.pathname === "/divbutton-login") return html(DIV_BUTTON_LOGIN);
+  if (url.pathname === "/spa-slow") return html(SPA_SLOW);
+  if (url.pathname === "/lockout-ar") return html(AR_LOCKOUT);
   if (url.pathname === "/sso-out") {
     // Absolute URL with a DIFFERENT hostname (localhost vs 127.0.0.1) — the
     // SSO detector keys on hostname change, so the hand-off must cross one.
@@ -195,6 +261,55 @@ try {
       !r.ok && r.code === "SSO_REDIRECT" && r.trail.some((t) => t.startsWith("sso:")),
       `${r.code}: ${r.detail} [${r.trail.join(" | ")}]`,
     );
+  }
+  // 9) v3 shapes: iframe-hosted login form → discovered and filled in-frame.
+  {
+    const r = await run("/iframe-login");
+    check(
+      "iframe-hosted login → ok, filled in-frame",
+      r.ok && r.trail.some((t) => t.includes("@f1")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 10) v3 shapes: shadow-DOM login form → pierced by discovery.
+  {
+    const r = await run("/shadow-login");
+    check(
+      "shadow-DOM login → ok",
+      r.ok && r.trail.some((t) => t.startsWith("filled:password")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 11) v3 shapes: phone-number login (tel input).
+  {
+    const r = await run("/phone-login");
+    check("phone-number login → ok", r.ok, `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`);
+  }
+  // 12) v3 shapes: <div role="button"> submit widget.
+  {
+    const r = await run("/divbutton-login");
+    check(
+      "div-role=button submit → ok",
+      r.ok && r.trail.some((t) => t.startsWith("submit:button-by-name")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 13) v3 shapes: SPA form swapped by JS without navigation → adaptive settle
+  // catches the change and the logged-in state is recognized.
+  {
+    const t0 = Date.now();
+    const r = await run("/spa-slow");
+    const elapsed = Date.now() - t0;
+    check(
+      "SPA JS swap (no navigation) → ok via signal",
+      r.ok && r.trail.some((t) => t.startsWith("signals:logged-in")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}] (${Math.round(elapsed / 1000)}s)`,
+    );
+  }
+  // 14) v3 shapes: Arabic lockout copy → LOGIN_BLOCKED.
+  {
+    const r = await run("/lockout-ar");
+    check("Arabic lockout copy → LOGIN_BLOCKED", !r.ok && r.code === "LOGIN_BLOCKED", `${r.code}: ${r.detail}`);
   }
   // 9) Cred-leak scan over every result this harness produced.
   {
