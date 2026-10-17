@@ -75,8 +75,15 @@ async function runJob(id: string): Promise<void> {
         const loginPage = await ctx.newPage();
         try {
           await loginPage.goto(job.settings.auth.loginUrl ?? job.url, { waitUntil: "domcontentloaded", timeout: config.NAV_WAIT_MS });
-          const lr = await attemptLogin(loginPage, { username: job.settings.auth.username, password: pw });
-          logEvent(job, lr.ok ? "login.ok" : "login.failed", lr.ok ? `as ${job.settings.auth.username}` : `${lr.code} ${lr.detail}`);
+          const lr = await attemptLogin(loginPage, { username: job.settings.auth.username, password: pw }, {
+            // SSO-hop detection is relative to the TARGET site, and the
+            // budget stays inside MAX_JOB_SECONDS.
+            entryHostname: new URL(job.url).hostname,
+            budgetMs: 90_000,
+          });
+          // Trail is credential-free by construction (tests enforce it).
+          const meta = lr.ok ? `as ${job.settings.auth.username}` : `${lr.code} ${lr.detail}`;
+          logEvent(job, lr.ok ? "login.ok" : "login.failed", `${meta} [${lr.trail.join(" | ")}]`.slice(0, 400));
         } catch (e) {
           logEvent(job, "login.failed", `LOGIN_FAILED ${(e instanceof Error ? e.message : String(e)).slice(0, 200)}`);
         } finally {

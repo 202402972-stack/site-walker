@@ -179,9 +179,10 @@ export function Landing({ limits, sample }: { limits: Limits; sample: SampleRun 
               <h3>Honest limits</h3>
               <StepList
                 steps={[
-                  { event: "LOGIN_FAILED", detail: "Multi-step logins, MFA/OTP codes, passkeys, and SSO round-trips are not supported — the run reports the failure and moves on." },
-                  { event: "LOGIN_FAILED", detail: "Google and other big providers often block sign-ins from server IPs as suspicious. It may work, it may challenge or lock the account — use a dedicated account, never your main one." },
-                  { event: "BOT_CHALLENGE", detail: "CAPTCHAs and Cloudflare challenges are detected and reported, never solved or bypassed. A page that only shows a challenge captures nothing." },
+                  { event: "LOGIN_NO_FORM", detail: "Variety of login layouts: username-only first screens, user+password, split forms — with layered field discovery, human-like typing, and four submit strategies. Wrong credentials report failure, never fake success." },
+                  { event: "MFA_REQUIRED", detail: "Second factors (OTP codes, authenticator push, passkeys) and SSO hand-offs to external providers report specific codes — the agent stops there instead of guessing." },
+                  { event: "SSO_REDIRECT", detail: "Google and other big providers often block sign-ins from server IPs as suspicious. It may work, it may challenge or lock the account — use a dedicated account, never your main one." },
+                  { event: "BOT_CHALLENGE", detail: "Challenge widgets embedded in the site's form don't block the run (the bot never touches them) — a full-page interstitial gets a bounded self-clear wait, then is reported honestly. Never solved or bypassed." },
                 ]}
               />
             </div>

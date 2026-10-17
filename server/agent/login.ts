@@ -1,123 +1,214 @@
-// Credential auto-login — fills a plain username+password form in the same
-// browser context, then capture proceeds with the resulting session.
+// Credential auto-login orchestrator — multi-step, multi-strategy, bounded.
 //
-// What this is NOT:
-// - Not a Google/SSO/MFA solver. The mechanism is generic form-fill; providers
-//   that challenge automation (Google "suspicious sign-in", OTP, passkeys) will
-//   fail and the job reports it — see BOT_CHALLENGE / LOGIN_FAILED.
-// - Not a CAPTCHA/Cloudflare bypass. Challenge pages are DETECTED (markers
-//   below), given a bounded wait in case a "managed" challenge auto-clears,
-//   then reported with code BOT_CHALLENGE. Nothing is solved or defeated.
-// - The password must never reach logs or disk — callers log only codes and
-//   the username. Enforcement is tested in tests/server/login.test.ts.
+// A login is a LOOP, not a single fill: username-only first screens, password
+// on the second screen, code-only second factors, SSO hops to identity
+// providers, lockout walls, and bot challenges each get an explicit branch
+// with a labeled outcome. Rounds are capped and the whole attempt is
+// deadline-bounded, so a weird page can never hang a job.
+//
+// Challenge policy (firm): full-page challenge interstitials are classified
+// and, when "managed", given a bounded self-clear wait. Challenge WIDGETS
+// embedded in the site's own form never stop the run — the agent fills the
+// site's fields and presses the site's button, but never ticks, solves, or
+// bypasses the widget itself. Both outcomes are honest: reported, not faked.
+//
+// Credential hygiene: this module receives the password as an argument and
+// never puts it — or any field VALUE — into results, trail entries, or
+// errors. Only selector kinds, counts, strategy names, and signal names are
+// recorded. Enforcement: tests/server/login.test.ts.
 import type { Page } from "playwright";
 import { config } from "../config.js";
+import {
+  PASS_SELECTOR,
+  CODE_INPUT_SELECTORS,
+  findField,
+  findUserField,
+  humanType,
+  submitForm,
+  detectMfa,
+  detectLockout,
+  detectSsoRedirect,
+  loggedInSignals,
+  snapshot,
+} from "./login/forms.js";
+import { classifyBlocker, waitForManagedClear } from "./login/challenges.js";
+import { detectChallenge, detectEmbeddedWidget } from "./login/markers.js";
+
+export { detectChallenge };
 
 export interface LoginCreds {
   username: string;
   password: string;
 }
 
+export type LoginCode =
+  | "LOGIN_NO_FORM"
+  | "LOGIN_FAILED"
+  | "MFA_REQUIRED"
+  | "SSO_REDIRECT"
+  | "LOGIN_BLOCKED"
+  | "BOT_CHALLENGE";
+
 export interface LoginResult {
   ok: boolean;
-  code?: "LOGIN_NO_FORM" | "LOGIN_FAILED" | "BOT_CHALLENGE";
-  /** Human-readable reason. Must never contain credentials. */
+  code?: LoginCode;
+  /** Human-readable reason. Never contains credentials or field values. */
   detail: string;
+  /** Cred-free diagnostic trail (selector kinds, strategy names, signals). */
+  trail: string[];
 }
 
-// Markers of bot-challenge pages (Cloudflare, Turnstile, CAPTCHA vendors).
-// Page text only — used to REPORT, never to interact with the challenge.
-export const CHALLENGE_MARKERS: RegExp[] = [
-  /cf-turnstile/i,
-  /g-recaptcha/i,
-  /recaptcha/i,
-  /hcaptcha/i,
-  /cloudflare/i,
-  /verify you are human/i,
-  /attention required/i,
-  /are you a robot/i,
-  /captcha/i,
-  /just a moment/i,
-];
-
-const USER_SELECTORS = [
-  'input[type="email"]',
-  'input[name*="user" i]',
-  'input[name*="email" i]',
-  'input[name*="login" i]',
-  'input[id*="user" i]',
-  'input[id*="email" i]',
-  'input[id*="login" i]',
-  'input[type="text"]',
-];
-
-const PASS_SELECTOR = 'input[type="password"]';
-
-export function detectChallenge(html: string, title: string): boolean {
-  const hay = `${title}\n${html.slice(0, 200_000)}`;
-  return CHALLENGE_MARKERS.some((re) => re.test(hay));
+export interface LoginOptions {
+  /** Hostname of the TARGET site — SSO hops are judged against it. */
+  entryHostname?: string;
+  /** Overall budget in ms. Defaults to 100s. */
+  budgetMs?: number;
+  /** Max form submits across all rounds. Defaults to 3. */
+  maxSubmits?: number;
+  /** Budget for a managed interstitial to clear itself. Defaults to 30s. */
+  managedClearMs?: number;
 }
 
-async function firstPresent(page: Page, selectors: string[]): Promise<string | null> {
-  for (const sel of selectors) {
-    try {
-      if ((await page.locator(sel).count()) > 0) return sel;
-    } catch {
-      /* try next */
-    }
-  }
-  return null;
-}
+const DEFAULT_BUDGET_MS = 100_000;
+const DEFAULT_MAX_SUBMITS = 3;
+const DEFAULT_MANAGED_CLEAR_MS = 30_000;
 
-export async function attemptLogin(page: Page, creds: LoginCreds): Promise<LoginResult> {
-  const userSel = await firstPresent(page, USER_SELECTORS);
-  const passSel = await firstPresent(page, [PASS_SELECTOR]);
-  if (!userSel || !passSel) {
-    return { ok: false, code: "LOGIN_NO_FORM", detail: "no username+password form found on the login page" };
-  }
-  await page.fill(userSel, creds.username);
-  await page.fill(passSel, creds.password);
-  const submit = page.locator('button[type="submit"], input[type="submit"]');
-  try {
-    if ((await submit.count()) > 0) await submit.first().click({ timeout: 5000 });
-    else await page.locator(passSel).press("Enter");
-  } catch {
-    /* fall through to the post-submit checks */
-  }
-  await page.waitForTimeout(3000);
+async function settle(page: Page): Promise<void> {
+  await page.waitForTimeout(2500);
   try {
     await page.waitForLoadState("domcontentloaded", { timeout: config.NAV_WAIT_MS });
   } catch {
     /* proceed with what rendered */
   }
+}
 
-  const html = await page.content().catch(() => "");
-  const title = await page.title().catch(() => "");
-  if (detectChallenge(html, title)) {
-    // Bounded wait only — managed challenges sometimes auto-clear in a real
-    // browser. Nothing is solved; a persistent challenge is reported.
-    await page.waitForTimeout(15000);
-    const html2 = await page.content().catch(() => "");
-    const title2 = await page.title().catch(() => "");
-    if (detectChallenge(html2, title2)) {
-      return {
-        ok: false,
-        code: "BOT_CHALLENGE",
-        detail: "bot challenge (CAPTCHA/Cloudflare) needs a human — reported, not bypassed",
-      };
-    }
-  }
-
-  let passGone = false;
+export async function attemptLogin(
+  page: Page,
+  creds: LoginCreds,
+  opts: LoginOptions = {},
+): Promise<LoginResult> {
+  const trail: string[] = [];
+  const deadline = Date.now() + (opts.budgetMs ?? DEFAULT_BUDGET_MS);
+  const maxSubmits = opts.maxSubmits ?? DEFAULT_MAX_SUBMITS;
+  const managedClearMs = opts.managedClearMs ?? DEFAULT_MANAGED_CLEAR_MS;
+  let submits = 0;
+  let embeddedSeen = false;
+  let entryHostname = opts.entryHostname ?? "";
   try {
-    passGone = (await page.locator(PASS_SELECTOR).count()) === 0;
+    entryHostname = entryHostname || new URL(page.url()).hostname;
   } catch {
-    /* treat as not-logged-in */
+    entryHostname = "";
   }
-  if (passGone) return { ok: true, detail: "form submitted, password field gone" };
-  return {
-    ok: false,
-    code: "LOGIN_FAILED",
-    detail: "form submitted but still on a login form (wrong credentials, MFA/extra step, or provider block?)",
-  };
+
+  const fail = (code: LoginCode, detail: string): LoginResult => ({ ok: false, code, detail, trail });
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    if (Date.now() > deadline) {
+      return fail("LOGIN_FAILED", `login budget exhausted after ${submits} submit(s)`);
+    }
+    const snap = await snapshot(page);
+
+    // 1) SSO hop: the browser ended up on another site's identity provider.
+    if (entryHostname) {
+      const ssoHost = detectSsoRedirect(snap.url, entryHostname);
+      if (ssoHost) {
+        trail.push(`sso:${ssoHost}`);
+        return fail("SSO_REDIRECT", `login handed off to external provider ${ssoHost} — SSO round-trips are unsupported`);
+      }
+    }
+
+    // 2) Full-page challenge interstitial — classify and wait/report.
+    const kind = classifyBlocker(snap.html, snap.title);
+    if (kind) {
+      trail.push(`challenge:blocker:${kind}`);
+      if (kind === "managed") {
+        const cleared = await waitForManagedClear(page, managedClearMs);
+        trail.push(cleared ? "challenge:managed-cleared" : "challenge:managed-persisted");
+        if (!cleared) {
+          return fail("BOT_CHALLENGE", "bot challenge (Cloudflare-style) needs a human — reported, not bypassed");
+        }
+        continue;
+      }
+      return fail(
+        "BOT_CHALLENGE",
+        kind === "hard"
+          ? "interactive image challenge needs a human — reported, not bypassed"
+          : "checkbox verification needs a human — not auto-clicked by policy",
+      );
+    }
+
+    // 3) A widget embedded in the site's own page never blocks the run — but
+    // it is recorded, and it is never touched by us.
+    if (!embeddedSeen && detectEmbeddedWidget(snap.html, snap.title)) {
+      embeddedSeen = true;
+      trail.push("challenge:embedded-recording");
+    }
+
+    // 4) Lockout / rate-limit wall — pointless (and harmful) to push through.
+    if (detectLockout(snap)) {
+      trail.push("lockout-detected");
+      return fail("LOGIN_BLOCKED", "account or IP is throttled/locked — further attempts would make it worse");
+    }
+
+    // 5) Field discovery across the whole matrix of login-page shapes.
+    const userSel = await findUserField(page);
+    const passSel = await findField(page, [PASS_SELECTOR]);
+    const codeSel = await findField(page, CODE_INPUT_SELECTORS);
+    const hasUser = userSel !== null;
+    const hasPass = passSel !== null;
+    trail.push(`fields:user=${hasUser ? "yes" : "no"} pass=${hasPass ? "yes" : "no"} code=${codeSel ? "yes" : "no"}`);
+
+    // 6) No recognizable fields → sort the end states.
+    if (!hasUser && !hasPass) {
+      if (loggedInSignals(snap)) {
+        trail.push("signals:logged-in");
+        return { ok: true, detail: "signed in (no login form, account signals present)", trail };
+      }
+      if (codeSel || detectMfa(snap).mfa) {
+        trail.push(codeSel ? "mfa:code-input" : "mfa:code-screen");
+        return fail("MFA_REQUIRED", "second-factor screen (code/approval) — needs the account owner, unsupported");
+      }
+      // A submitted login normally dissolves the form (redirect, dashboard).
+      // With no challenge/MFA/lockout/SSO anywhere, that is success; an
+      // untouched page with no form was simply the wrong page.
+      if (submits > 0) {
+        trail.push("signals:form-dissolved");
+        return { ok: true, detail: `form submitted (${submits}x), no login form remains`, trail };
+      }
+      return fail("LOGIN_NO_FORM", "no username+password form found on the login page");
+    }
+
+    // 7) Second-factor walls: a code input without a password (any time), or
+    // a code input still present after credentials were already submitted.
+    if (codeSel && (!hasPass || submits > 0)) {
+      trail.push("mfa:code-input");
+      return fail("MFA_REQUIRED", "second-factor code requested (OTP/authenticator) — unsupported, needs the account owner");
+    }
+
+    // 8) Cap: still facing a login form after N submits = wrong credentials
+    // or an extra step we do not invent.
+    if (submits >= maxSubmits) {
+      return fail("LOGIN_FAILED", `still on a login form after ${submits} submit(s) — wrong credentials or an extra step?`);
+    }
+
+    // 9) Fill what is present: username-only first screens are as normal as
+    // user+password screens — each round fills exactly what the page asks.
+    if (hasUser && userSel) {
+      if (!(await humanType(page, userSel, creds.username))) {
+        return fail("LOGIN_FAILED", "username field present but not typeable");
+      }
+      trail.push("filled:username");
+    }
+    if (hasPass && passSel) {
+      if (!(await humanType(page, passSel, creds.password))) {
+        return fail("LOGIN_FAILED", "password field present but not typeable");
+      }
+      trail.push("filled:password");
+    }
+    const strategy = await submitForm(page, passSel);
+    submits++;
+    trail.push(`submit:${strategy}#${submits}`);
+    await settle(page);
+  }
 }

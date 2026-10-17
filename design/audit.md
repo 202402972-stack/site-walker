@@ -31,3 +31,23 @@ Rendered check: new `#login` section + console login fieldset reuse token styles
 no new palette, no gradients, no decoration. Axe still 0 violations both routes, QA
 0px overflow all viewports. Verified: unit 6/6, fixture 6/6 live, API 8/8 live
 (same-site guard message exact, password absent from job.json). AT-01…AT-07 PASS.
+
+## Login agent v2 — hardening pass (2026-10-17)
+
+Rewritten as a bounded multi-step loop with a blocker/embedded challenge split
+(no policy change in what is automated vs. reported — the widget line holds):
+
+- `server/agent/login.ts` = orchestrator (≤ 3 submits, 90 s budget when wired to a
+  job, cred-free `trail` on every result); `server/agent/login/forms.ts` = layered
+  field discovery + human-like typing + 4 submit strategies + MFA/lockout/SSO
+  detectors; `server/agent/login/challenges.ts` + `markers.ts` = blocker
+  classification (managed/hard/interactive) with a self-clear wait.
+- New outcome codes: `MFA_REQUIRED`, `SSO_REDIRECT`, `LOGIN_BLOCKED` (joined
+  `LOGIN_NO_FORM` / `LOGIN_FAILED` / `BOT_CHALLENGE`). SSO detection ignores
+  www./m./same-base-domain variants, so ordinary subdomain redirects cannot read
+  as provider hand-offs.
+- Verified: unit 15/15 (incl. embed-vs-blocker table, SSO false-positive cases),
+  fixture 12/12 live real-browser (all outcome codes exercised in-fixture, incl.
+  a self-clearing interstitial completing a real login), API 8/8 live against the
+  rebuilt server. Frontend unchanged this pass — axe/QA evidence from 2026-10-16
+  stands. AT-01…AT-07 PASS.

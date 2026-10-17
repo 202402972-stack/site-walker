@@ -13,7 +13,7 @@ Paste a URL → real Chromium walks the site → one full-page screenshot per se
 - `tools/extract-design.ts` — Phase 0: `npm run extract-design -- <reference-url>`
 - `tools/measure-bands.ts`, `tools/axe-check.ts`, `tools/visual-qa.ts` — A4/A11/A13 evidence
 - `tools/spa-fixture.ts` — A5: real-browser SPA client-routing verification (fixture + capture pipeline)
-- `tools/login-fixture.ts` — login step verification (correct/wrong creds, no-form page, challenge markers, no-leak)
+- `tools/login-fixture.ts` — login loop verification (12 live checks: correct/wrong creds, no-form, MFA screen, persistent + self-clearing interstitials, embedded captcha widget, SSO hand-off, cred-leak scan)
 - `tools/login-api-check.ts` — login API checks (`SW_TOKEN=... npx tsx tools/login-api-check.ts [base]`)
 - `tools/extract-fonts.ts` → `design/fonts.md` — reference @font-face evidence
 - `tools/make-og.ts`, `tools/side-by-side.ts` — OG card generator + A14 side-by-side sheets (`design/qa/side-by-side-*.png`)
@@ -57,12 +57,23 @@ logged (`login.failed` + code) and capture continues with whatever is public.
 Guarantees (tested in `tests/server/login.test.ts` + `tools/login-fixture.ts`):
 - Passwords live in server memory only (`server/jobs/secrets.ts`), single-use, deleted
   on use. Never in `job.json`, logs, SSE, ZIP, or the API. `settings.auth` on disk holds
-  username + login page only.
+  username + login page only. The diagnostic trail records selector kinds, submit
+  strategies, and signal names — never field values.
 - A custom login page must share the entry URL's origin (enforced server-side, 400
   otherwise) — credentials can never be posted to an unrelated host.
-- CAPTCHAs / Cloudflare challenges are DETECTED and reported (`BOT_CHALLENGE`), never
-  solved or bypassed. A persistent challenge captures nothing.
-- MFA/OTP, passkeys, multi-step and SSO logins are unsupported and report `LOGIN_FAILED`.
+- The login agent is a bounded multi-step loop (90 s budget, ≤ 3 form submits): it
+  fills whatever screen appears — username-only first steps, user+password, SSO-less
+  redirects — with layered field discovery (accessible names → CSS → fallbacks),
+  human-like typing, and four submit strategies. Wrong credentials fail honestly
+  (`LOGIN_FAILED`).
+- CAPTCHAs are split honestly: a challenge WIDGET inside the site's own form (reCAPTCHA
+  box, Turnstile) never blocks the run — the site's fields are filled and the site's
+  button pressed, and the provider decides (nothing is ticked or solved). A full-page
+  interstitial ("Just a moment…", unusual-traffic walls) gets a bounded self-clear
+  wait, then reports `BOT_CHALLENGE` if it persists. Never bypassed, never faked.
+- Second factors (`MFA_REQUIRED`), SSO hand-offs to external providers (`SSO_REDIRECT`,
+  guarded against www/subdomain false positives), and lockout walls (`LOGIN_BLOCKED`,
+  attempts stop instead of deepening the lockout) each report their own code.
 
 Accepted risks (owner's explicit call — do not silently widen this):
 - Google and other big providers often flag server-IP sign-ins as suspicious; this can

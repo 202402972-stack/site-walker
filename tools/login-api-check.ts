@@ -86,7 +86,8 @@ check("auth job accepted", created.status === 202, `HTTP ${created.status}`);
 const id = (created.body as { id?: string } | null)?.id ?? "";
 if (!id) process.exit(1);
 
-let job: { status?: string; steps?: { event: string; detail?: string }[]; settings?: { auth?: unknown } } | null = null;
+type JobView = { status?: string; steps?: { event: string; detail?: string }[]; settings?: { auth?: unknown } };
+let job: JobView | null = null;
 const t0 = Date.now();
 while (Date.now() - t0 < 150_000) {
   await sleep(4000);
@@ -94,7 +95,7 @@ while (Date.now() - t0 < 150_000) {
   if (r.status === 200 && typeof r.body === "object" && r.body !== null) {
     const st = (r.body as { status?: string }).status;
     if (st === "done" || st === "partial" || st === "failed") {
-      job = r.body as typeof job;
+      job = r.body as JobView;
       break;
     }
   }

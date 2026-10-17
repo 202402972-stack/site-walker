@@ -1,43 +1,69 @@
 // Login verification harness — runs the REAL attemptLogin against a fixture
-// site with a working session cookie. Cases: correct creds → ok + session
-// page reachable; wrong creds → LOGIN_FAILED; formless page → LOGIN_NO_FORM;
-// challenge markup → detectChallenge true. Also asserts a serialized job
-// record carrying settings.auth contains no password material.
+// site with a working session. Cases cover the full matrix:
+//   correct creds → ok; wrong creds → LOGIN_FAILED after capped retries;
+//   formless page → LOGIN_NO_FORM; code-only screen → MFA_REQUIRED;
+//   persistent interstitial → BOT_CHALLENGE (managed, honest report);
+//   self-clearing interstitial → smart wait, then the login succeeds;
+//   embedded reCAPTCHA widget → run proceeds, widget never touched;
+//   SSO hand-off → SSO_REDIRECT. Plus a cred-leak scan over every result.
 //
-// Fixture is on 127.0.0.1 and the harness calls the agent module directly
-// (same rationale as tools/spa-fixture.ts).
+// Server binds dual-stack so `http://localhost` and `http://127.0.0.1` are
+// distinguishable hostnames (SSO case rides that, no DNS hacks).
 // Usage: npx tsx tools/login-fixture.ts
 import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { launchBrowser } from "../server/agent/browser.js";
-import { attemptLogin, detectChallenge } from "../server/agent/login.js";
+import { attemptLogin, type LoginResult } from "../server/agent/login.js";
 
 const USER = "owner@example.com";
 const PASS = "correct-horse-battery";
 
-const LOGIN_PAGE = (error: string) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Sign in</title></head>
-<body><h1>Sign in</h1>${error ? `<p style="color:red">${error}</p>` : ""}
+const page = (title: string, body: string) =>
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${title}</title></head><body>${body}</body></html>`;
+
+const LOGIN_PAGE = (error: string) => page("Sign in", `<h1>Sign in</h1>${error ? `<p style="color:red">${error}</p>` : ""}
 <form method="post" action="/login">
 <label>Email <input type="email" name="username"></label>
 <label>Password <input type="password" name="password"></label>
-<button type="submit">Sign in</button></form></body></html>`;
+<button type="submit">Sign in</button></form>`);
 
-const APP_PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Dashboard</title></head>
-<body><h1>Welcome back</h1><div style="height:1500px">member content</div></body></html>`;
+const APP_PAGE = page("Dashboard", `<h1>Welcome back</h1><div style="height:1500px">member content</div>`);
+const PLAIN_PAGE = page("About", `<h1>Public page, no form here</h1>`);
+const MFA_PAGE = page("Two-factor", `<h1>Two-step verification</h1><p>Enter the 6-digit code we sent to your phone.</p>
+<form><input name="otp" inputmode="numeric" autocomplete="one-time-code"><button type="submit">Verify</button></form>`);
+const CAPTCHA_LOGIN = page("Sign in (captcha embed)", `<h1>Sign in</h1>
+<form method="post" action="/login">
+<label>Email <input type="email" name="username"></label>
+<label>Password <input type="password" name="password"></label>
+<div class="g-recaptcha" data-sitekey="test-key"></div>
+<button type="submit">Sign in</button></form>`);
+const SSO_LOGIN = page("Sign in (SSO)", `<h1>Company SSO</h1>
+<form method="post" action="/sso-out">
+<label>Email <input type="email" name="username"></label>
+<button type="submit">Continue with provider</button></form>`);
+const IDP_PAGE = page("Provider", `<h1>Simulated identity provider</h1><p>This is where the SSO round-trip would happen.</p>`);
 
-const PLAIN_PAGE = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>About</title></head>
-<body><h1>Public page, no form here</h1></body></html>`;
+const blockers = {
+  persist: `<div id="c" style="font-size:24px">Just a moment…</div>
+<script>setInterval(()=>{document.getElementById("c").textContent="Just a moment… (cf-chl-bypass)";},500);</script>`,
+  clear: `<div id="c" style="font-size:24px">Just a moment…</div>
+<form method="post" action="/login">
+<label>Email <input type="email" name="username"></label>
+<label>Password <input type="password" name="password"></label>
+<button type="submit">Sign in</button></form>
+<script>setTimeout(()=>{document.getElementById("c").textContent="";},1800);</script>`,
+};
 
 const server = http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://x");
   const cookies = Object.fromEntries(
-    (req.headers.cookie ?? "").split(";").map((c) => c.trim().split("=").map(decodeURIComponent) as [string, string]),
+    (req.headers.cookie ?? "").split(";").filter(Boolean).map((c) => c.trim().split("=").map(decodeURIComponent) as [string, string]),
   );
-  if (url.pathname === "/login" && req.method === "GET") {
-    res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    res.end(LOGIN_PAGE(""));
-    return;
-  }
+  const html = (body: string, code = 200, headers: Record<string, string> = {}) => {
+    res.writeHead(code, { "content-type": "text/html; charset=utf-8", ...headers });
+    res.end(body);
+  };
+  if (url.pathname === "/login" && req.method === "GET") return html(LOGIN_PAGE(""));
   if (url.pathname === "/login" && req.method === "POST") {
     let body = "";
     req.on("data", (c) => { body += c; });
@@ -47,24 +73,33 @@ const server = http.createServer((req, res) => {
         res.writeHead(302, { location: "/app", "set-cookie": "session=1; Path=/; HttpOnly" });
         res.end();
       } else {
-        res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-        res.end(LOGIN_PAGE("Wrong email or password."));
+        html(LOGIN_PAGE("Wrong email or password."));
       }
     });
     return;
   }
   if (url.pathname === "/app") {
-    if (cookies.session === "1") {
-      res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-      res.end(APP_PAGE);
-    } else {
-      res.writeHead(302, { location: "/login" });
-      res.end();
-    }
+    if (cookies.session === "1") return html(APP_PAGE);
+    res.writeHead(302, { location: "/login" });
+    res.end();
     return;
   }
-  res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-  res.end(PLAIN_PAGE);
+  if (url.pathname === "/plain") return html(PLAIN_PAGE);
+  if (url.pathname === "/mfa") return html(MFA_PAGE);
+  if (url.pathname === "/login-captcha") return html(CAPTCHA_LOGIN);
+  if (url.pathname === "/login-sso") return html(SSO_LOGIN);
+  if (url.pathname === "/sso-out") {
+    // Absolute URL with a DIFFERENT hostname (localhost vs 127.0.0.1) — the
+    // SSO detector keys on hostname change, so the hand-off must cross one.
+    const a = server.address() as AddressInfo;
+    res.writeHead(302, { location: `http://localhost:${a.port}/sso-idp` });
+    res.end();
+    return;
+  }
+  if (url.pathname === "/sso-idp") return html(IDP_PAGE);
+  if (url.pathname === "/challenge-block") return html(page("Protected", blockers.persist));
+  if (url.pathname === "/challenge-clear") return html(page("Protected", blockers.clear));
+  html(PLAIN_PAGE, 404);
 });
 
 const failures: string[] = [];
@@ -73,53 +108,105 @@ function check(name: string, pass: boolean, detail: string): void {
   if (!pass) failures.push(name);
 }
 
-await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
-const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+await new Promise<void>((r) => server.listen(0, r));
+const { port } = server.address() as AddressInfo;
+const base = `http://127.0.0.1:${port}`;
 console.log(`login fixture on ${base}`);
 
 const browser = await launchBrowser();
+const captures: LoginResult[] = [];
 try {
-  // 1) Correct credentials → ok + session cookie unlocks /app in the same context.
-  {
+  const run = async (path: string, opts: Record<string, unknown> = {}): Promise<LoginResult> => {
     const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await page.goto(`${base}/login`, { waitUntil: "domcontentloaded" });
-    const r = await attemptLogin(page, { username: USER, password: PASS });
-    check("correct creds → login.ok", r.ok && !r.code, `${r.code ?? "ok"}: ${r.detail}`);
-    await page.goto(`${base}/app`, { waitUntil: "domcontentloaded" });
-    const h1 = await page.locator("h1").textContent();
+    const p = await ctx.newPage();
+    await p.goto(`${base}${path}`, { waitUntil: "domcontentloaded" });
+    const r = await attemptLogin(p, { username: USER, password: PASS }, { entryHostname: "127.0.0.1", ...opts });
+    captures.push(r);
+    await ctx.close();
+    return r;
+  };
+
+  // 1) Correct credentials → ok, and the session cookie unlocks /app.
+  {
+    const r = await run("/login");
+    check("correct creds → login.ok", r.ok && !r.code, `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`);
+    const ctx = await browser.newContext();
+    const p = await ctx.newPage();
+    await p.goto(`${base}/login`, { waitUntil: "domcontentloaded" });
+    await p.locator('input[name="username"]').fill(USER);
+    await p.locator('input[name="password"]').fill(PASS);
+    await Promise.all([p.waitForURL("**/app"), p.locator('button[type="submit"]').click()]);
+    const h1 = await p.locator("h1").textContent();
     check("session cookie survives for capture", h1?.includes("Welcome back") ?? false, `h1=${h1}`);
     await ctx.close();
   }
-  // 2) Wrong credentials → LOGIN_FAILED (still on the form).
+  // 2) Wrong credentials → LOGIN_FAILED after the capped retries.
   {
     const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await page.goto(`${base}/login`, { waitUntil: "domcontentloaded" });
-    const r = await attemptLogin(page, { username: USER, password: "wrong" });
-    check("wrong creds → LOGIN_FAILED", !r.ok && r.code === "LOGIN_FAILED", `${r.code}: ${r.detail}`);
+    const p = await ctx.newPage();
+    await p.goto(`${base}/login`, { waitUntil: "domcontentloaded" });
+    const r = await attemptLogin(p, { username: USER, password: "definitely-wrong" }, { entryHostname: "127.0.0.1", maxSubmits: 2 });
+    captures.push(r);
+    check("wrong creds → LOGIN_FAILED", !r.ok && r.code === "LOGIN_FAILED", `${r.code}: ${r.detail} [${r.trail.join(" | ")}]`);
     await ctx.close();
   }
-  // 3) Page without a form → LOGIN_NO_FORM.
+  // 3) Page without a form.
   {
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await page.goto(`${base}/plain`, { waitUntil: "domcontentloaded" });
-    const r = await attemptLogin(page, { username: USER, password: PASS });
+    const r = await run("/plain");
     check("formless page → LOGIN_NO_FORM", !r.ok && r.code === "LOGIN_NO_FORM", `${r.code}: ${r.detail}`);
-    await ctx.close();
   }
-  // 4) Challenge markup is detected (reported, never solved).
-  check(
-    "challenge markup detected",
-    detectChallenge('<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>', "Just a moment..."),
-    "turnstile marker",
-  );
-  // 5) A persisted job-style record carries no password material.
+  // 4) Code-primary second-factor screen.
   {
-    const record = { settings: { auth: { username: USER, loginUrl: `${base}/login` } }, steps: [] };
-    const json = JSON.stringify(record);
-    check("no password in persisted record", !/password/i.test(json) && !json.includes(PASS), "settings.auth is username-only");
+    const r = await run("/mfa");
+    check("code-only screen → MFA_REQUIRED", !r.ok && r.code === "MFA_REQUIRED", `${r.code}: ${r.detail}`);
+  }
+  // 5) Persistent interstitial → honest BOT_CHALLENGE after the bounded wait.
+  {
+    const r = await run("/challenge-block", { managedClearMs: 6000 });
+    check(
+      "persistent interstitial → BOT_CHALLENGE",
+      !r.ok && r.code === "BOT_CHALLENGE" && r.trail.some((t) => t.includes("managed-persisted")),
+      `${r.code}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 6) Self-clearing interstitial → smart wait, then the login succeeds.
+  {
+    const r = await run("/challenge-clear", { managedClearMs: 8000 });
+    check(
+      "self-clearing interstitial → ok after clear",
+      r.ok && r.trail.some((t) => t.includes("managed-cleared")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 7) Embedded widget: the run proceeds; the widget is never touched.
+  {
+    const r = await run("/login-captcha");
+    check(
+      "embedded captcha widget → ok, run proceeds",
+      r.ok && r.trail.some((t) => t.startsWith("challenge:embedded")),
+      `${r.code ?? "ok"}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 8) SSO hand-off → reported, credentials never posted cross-site.
+  {
+    const r = await run("/login-sso");
+    check(
+      "SSO hand-off → SSO_REDIRECT",
+      !r.ok && r.code === "SSO_REDIRECT" && r.trail.some((t) => t.startsWith("sso:")),
+      `${r.code}: ${r.detail} [${r.trail.join(" | ")}]`,
+    );
+  }
+  // 9) Cred-leak scan over every result this harness produced.
+  {
+    const blob = captures.map((r) => `${r.detail}|${r.trail.join("|")}`).join("\n");
+    const distinctTrails = new Set(captures.map((r) => r.trail.length)).size;
+    check("no credentials in any result/trail", !blob.includes(USER) && !blob.includes(PASS), `${captures.length} results scanned`);
+    check("trail actually populated", distinctTrails > 1 && captures.every((r) => r.trail.length > 0), `distinct trail lengths: ${[...new Set(captures.map((r) => r.trail.length))].join(",")}`);
+  }
+  // 10) A persisted job-style record carries no password material.
+  {
+    const record = JSON.stringify({ settings: { auth: { username: USER, loginUrl: `${base}/login` } }, steps: [] });
+    check("no password in persisted record", !/password/i.test(record) && !record.includes(PASS), "settings.auth is username-only");
   }
 } finally {
   await browser.close();
